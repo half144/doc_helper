@@ -1,4 +1,5 @@
 import { Component, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { map } from 'rxjs';
 import { ScenariosService } from 'src/app/core/services/scenarios/scenarios.service';
 
@@ -21,97 +22,5 @@ export class ScenariosComponent {
     })
   );
 
-  data = [
-    {
-      title: 'Card 322',
-      developer: 'Rafael Vinicius Pinheiro de Souza',
-      tester: 'Rafael Vinicius Pinheiro de Souza',
-      status: 'Em desenvolvimento',
-      sprint: 'Sprint 33',
-    },
-    {
-      title: 'Card 322',
-      developer: 'Rafael Vinicius Pinheiro de Souza',
-      tester: 'Rafael Vinicius Pinheiro de Souza',
-      status: 'Em desenvolvimento',
-      sprint: 'Sprint 33',
-    },
-    {
-      title: 'Card 322',
-      developer: 'Rafael Vinicius Pinheiro de Souza',
-      tester: 'Rafael Vinicius Pinheiro de Souza',
-      status: 'Em desenvolvimento',
-      sprint: 'Sprint 33',
-    },
-    {
-      title: 'Card 322',
-      developer: 'Rafael Vinicius Pinheiro de Souza',
-      tester: 'Rafael Vinicius Pinheiro de Souza fdfafsa fskdskad isidoasidosa',
-      status: 'Em desenvolvimento',
-      sprint: 'Sprint 33',
-    },
-    {
-      title: 'Card 322',
-      developer: 'Rafael Vinicius Pinheiro de Souza',
-      tester: 'Rafael Vinicius Pinheiro de Souza',
-      status: 'Em desenvolvimento',
-      sprint: 'Sprint 33',
-    },
-    {
-      title: 'Card 322',
-      developer: 'Rafael Vinicius Pinheiro de Souza',
-      tester: 'Rafael Vinicius Pinheiro de Souza fdfafsa fskdskad isidoasidosa',
-      status: 'Em desenvolvimento',
-      sprint: 'Sprint 33',
-    },
-    {
-      title: 'Card 322',
-      developer: 'Rafael Vinicius Pinheiro de Souza',
-      tester: 'Rafael Vinicius Pinheiro de Souza',
-      status: 'Em desenvolvimento',
-      sprint: 'Sprint 33',
-    },
-    {
-      title: 'Card 322',
-      developer: 'Rafael Vinicius Pinheiro de Souza',
-      tester: 'Rafael Vinicius Pinheiro de Souza fdfafsa fskdskad isidoasidosa',
-      status: 'Em desenvolvimento',
-      sprint: 'Sprint 33',
-    },
-    {
-      title: 'Card 322',
-      developer: 'Rafael Vinicius Pinheiro de Souza',
-      tester: 'Rafael Vinicius Pinheiro de Souza',
-      status: 'Em desenvolvimento',
-      sprint: 'Sprint 33',
-    },
-    {
-      title: 'Card 322',
-      developer: 'Rafael Vinicius Pinheiro de Souza',
-      tester: 'Rafael Vinicius Pinheiro de Souza fdfafsa fskdskad isidoasidosa',
-      status: 'Em desenvolvimento',
-      sprint: 'Sprint 33',
-    },
-    {
-      title: 'Card 322',
-      developer: 'Rafael Vinicius Pinheiro de Souza',
-      tester: 'Rafael Vinicius Pinheiro de Souza',
-      status: 'Em desenvolvimento',
-      sprint: 'Sprint 33',
-    },
-    {
-      title: 'Card 322',
-      developer: 'Rafael Vinicius Pinheiro de Souza',
-      tester: 'Rafael Vinicius Pinheiro de Souza fdfafsa fskdskad isidoasidosa',
-      status: 'Em desenvolvimento',
-      sprint: 'Sprint 33',
-    },
-    {
-      title: 'Card 322',
-      developer: 'Rafael Vinicius Pinheiro de Souza',
-      tester: 'Rafael Vinicius Pinheiro de Souza',
-      status: 'Em desenvolvimento',
-      sprint: 'Sprint 33',
-    },
-  ];
+  scenarios = toSignal(this.scenarios$);
 }

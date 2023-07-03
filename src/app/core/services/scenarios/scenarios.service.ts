@@ -1,23 +1,31 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, tap } from 'rxjs';
 import { URL } from '../../constants';
+import { HttpCacheService } from '../../cache/http-cache.service';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ScenariosService {
+  httpCache = inject(HttpCacheService);
   http = inject(HttpClient);
 
   getScenarioById(id: string): Observable<any> {
-    return this.http.get<any>(`${URL}scenarios/${id}`);
+    console.log('getScenarioById', id);
+    return this.httpCache.get(`${URL}scenarios/${id}`);
   }
 
   getAllScenarios() {
-    return this.http.get<any>(`${URL}scenarios`);
+    return this.httpCache.get(`${URL}scenarios`);
   }
 
   saveScenario(scenario: any) {
-    return this.http.post(`${URL}scenarios`, scenario);
+    return this.http.post(`${URL}scenarios`, scenario).pipe(
+      tap(() => {
+        this.httpCache.refetch(`${URL}scenarios`);
+        this.httpCache.invalidateCache(`${URL}scenarios/${scenario.id}`);
+      })
+    );
   }
 }

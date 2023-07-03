@@ -1,7 +1,8 @@
 import { Component, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { switchMap, tap } from 'rxjs';
+import { switchMap } from 'rxjs';
 import { ScenariosService } from 'src/app/core/services/scenarios/scenarios.service';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 @Component({
   selector: 'app-edit',
@@ -13,11 +14,8 @@ export class EditComponent {
   scenariosService = inject(ScenariosService);
 
   scenario$ = this.activatedRoute.params.pipe(
-    switchMap((params) => {
-      return this.scenariosService.getScenarioById(params['id']);
-    }),
-    tap((scenario) => {
-      console.log(scenario);
-    })
+    switchMap((params) => this.scenariosService.getScenarioById(params['id']))
   );
+
+  scenario = toSignal(this.scenario$);
 }

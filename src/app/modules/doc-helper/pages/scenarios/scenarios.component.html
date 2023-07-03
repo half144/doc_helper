@@ -18,7 +18,7 @@
       class="rounded-lg"
       nz-col
       [nzSpan]="6"
-      *ngFor="let item of scenarios$ | async"
+      *ngFor="let item of scenarios()"
     >
       <nz-list-item>
         <nz-card [nzTitle]="item.cardTitle">

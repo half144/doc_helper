@@ -16,10 +16,10 @@ export class DocHelperComponent implements OnInit {
   scenarioService = inject(ScenariosService);
 
   cardInfoForm = this.formBuilder.group({
-    cardNumber: [this.cardInfo?.cardNumber ?? null, [Validators.required]],
-    cardReviwer: [this.cardInfo?.cardReviwer ?? null, [Validators.required]],
-    cardHolder: [this.cardInfo?.cardHolder ?? null, [Validators.required]],
-    sprint: [this.cardInfo?.sprint ?? null, [Validators.required]],
+    cardNumber: [null, [Validators.required]],
+    cardReviwer: [null, [Validators.required]],
+    cardHolder: [null, [Validators.required]],
+    sprint: [null, [Validators.required]],
   });
 
   scenariosForm: UntypedFormGroup = this.formBuilder.group({});
