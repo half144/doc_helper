@@ -1,0 +1,46 @@
+<nz-list class="p-5" nzGrid>
+  <div nz-row [nzGutter]="16">
+    <div nz-col [nzSpan]="6">
+      <!-- crie um card de criar cenarios -->
+      <nz-list-item>
+        <nz-card
+          [routerLink]="['/create']"
+          class="border-slate-400 cursor-pointer hover:border-blue-500 h-[100px] transition-all border-dashed flex items-center justify-center"
+        >
+          <div class="flex items-center justify-center gap-2">
+            <h1>Criar cenário</h1>
+            <span nz-icon nzType="plus"></span>
+          </div>
+        </nz-card>
+      </nz-list-item>
+    </div>
+    <div
+      class="rounded-lg"
+      nz-col
+      [nzSpan]="6"
+      *ngFor="let item of scenarios$ | async"
+    >
+      <nz-list-item>
+        <nz-card [nzTitle]="item.cardTitle">
+          <div class="flex flex-col gap-8">
+            <div>
+              <p>
+                Desenvolvedor:
+                <span class="font-bold">{{ item.cardHolder }}</span>
+              </p>
+              <p>
+                Revisor: <span class="font-bold">{{ item.cardReviwer }}</span>
+              </p>
+            </div>
+            <div class="flex items-end justify-end gap-2">
+              <button [routerLink]="['edit', item._id]" nz-button>
+                Editar
+              </button>
+              <button nz-button nzType="dashed">Evidenciar</button>
+            </div>
+          </div>
+        </nz-card>
+      </nz-list-item>
+    </div>
+  </div>
+</nz-list>

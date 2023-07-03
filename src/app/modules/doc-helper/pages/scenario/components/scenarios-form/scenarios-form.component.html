@@ -1,0 +1,146 @@
+<div>
+  <form
+    class="flex flex-col rounded-md w-full p-3 border border-slate-200 gap-3 mb-3"
+    nz-form
+    formLayout="vertical"
+    [formGroup]="cardInfoForm"
+    *ngIf="cardInfoForm"
+  >
+    <h1 class="text-slate-800 text-base font-semibold">Detalhes do card</h1>
+
+    <nz-form-item class="m-0">
+      <nz-select
+        class="w-full"
+        nzShowSearch
+        nzAllowClear
+        nzPlaceHolder="Desenvolvedor responsável"
+        formControlName="cardHolder"
+      >
+        <nz-option
+          nzLabel="Ana Toledo Lobo Maia"
+          nzValue="Ana Toledo Lobo Maia"
+        ></nz-option>
+        <nz-option
+          nzLabel="Bruno Silva Bandeira"
+          nzValue="Bruno Silva Bandeirao"
+        ></nz-option>
+        <nz-option
+          nzLabel="Vander Luis Figueiredo Toso"
+          nzValue="Vander Luis Figueiredo Toso"
+        ></nz-option>
+        <nz-option
+          nzLabel="Victor Hugo Oliveira da Silva"
+          nzValue="Victor Hugo Oliveira da Silva"
+        ></nz-option>
+        <nz-option nzLabel="Wallace Reis" nzValue="Wallace Reis"></nz-option>
+        <nz-option
+          nzLabel="Wellington Martins Ferreira"
+          nzValue="Wellington Martins Ferreira"
+        ></nz-option>
+      </nz-select>
+    </nz-form-item>
+    <nz-form-item class="m-0">
+      <input nz-input placeholder="Revisor" formControlName="cardReviwer" />
+    </nz-form-item>
+    <nz-form-item class="m-0">
+      <input
+        nz-input
+        placeholder="Numero do card"
+        formControlName="cardNumber"
+      />
+    </nz-form-item>
+    <nz-input-group nzAddOnBefore="Sprint">
+      <input type="text" nz-input placeholder="0.0" formControlName="sprint" />
+    </nz-input-group>
+  </form>
+  <div class="h-[calc(100vh-400px)]">
+    <form
+      #form
+      class="flex h-full overflow-scroll flex-col rounded-md w-full p-3 border border-slate-200 gap-3"
+      nz-form
+      [formGroup]="scenariosForm"
+    >
+      <div class="flex items-center justify-between">
+        <div>
+          <h1 class="text-slate-800 text-base font-semibold">
+            Cenarios de teste
+          </h1>
+        </div>
+        <div>
+          <a
+            nz-popconfirm
+            nzPopconfirmTitle="Quer apagar TUDO?"
+            nzPopconfirmPlacement="bottom"
+            class="flex items-center justify-center"
+            nzPopconfirmPlacement="topRight"
+            (nzOnConfirm)="deleteAllFields()"
+          >
+            <span
+              *ngIf="listOfControl.length > 1"
+              class="hover:text-red-500 cursor-pointer"
+              nz-icon
+              nzType="delete"
+              nzTheme="fill"
+            ></span>
+          </a>
+        </div>
+      </div>
+
+      <nz-form-item
+        *ngFor="let control of listOfControl; let i = index"
+        class="mb-0"
+      >
+        <form
+          [formGroupName]="control.controlInstance"
+          class="flex w-full items-center gap-2"
+        >
+          <input
+            nz-input
+            placeholder="No sistema do GRI, quan..."
+            [attr.id]="control.id"
+            formControlName="testcaseName"
+            autocomplete="off"
+          />
+          <a
+            nz-popconfirm
+            nzPopconfirmTitle="Quer deletar esse cenário?"
+            nzPopconfirmPlacement="bottom"
+            class="flex items-center justify-center"
+            nzPopconfirmPlacement="topRight"
+            (nzOnConfirm)="removeField(control)"
+          >
+            <span
+              nz-icon
+              nzType="minus-circle-o"
+              class="cursor-pointer hover:text-red-500"
+            ></span>
+          </a>
+        </form>
+      </nz-form-item>
+      <nz-form-item class="m-0">
+        <nz-form-control>
+          <div class="flex items-center justify-between gap-3">
+            <button
+              *ngIf="listOfControl.length > 0"
+              nz-button
+              nzType="primary"
+              class="flex items-center justify-center p-2 w-full"
+              (click)="saveScenario()"
+            >
+              Salvar
+            </button>
+            <button
+              nz-button
+              nzType="dashed"
+              class="flex items-center justify-center p-2 w-full"
+              (click)="addField($event)"
+            >
+              <span nz-icon nzType="plus"></span>
+              Adicionar cenário
+            </button>
+          </div>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </div>
+</div>

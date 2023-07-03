@@ -1,0 +1,55 @@
+<div
+  class="flex flex-col items-center gap-3 mt-4"
+  *ngIf="!listOfControl.length"
+>
+  <nz-empty [nzNotFoundContent]="null"></nz-empty>
+  <p class="text-slate-700">Nenhum cenário escrito até agora</p>
+</div>
+<div *ngIf="listOfControl.length" class="h-[calc(100vh-200px)]">
+  <form
+    class="flex flex-col h-full overflow-scroll rounded-md w-full p-3 border border-slate-200 gap-3"
+    nz-form
+    [formGroup]="scenariosForm"
+  >
+    <h1 class="text-slate-800 text-base font-semibold">Cenarios descritos</h1>
+    <nz-form-item
+      *ngFor="let control of listOfControl; let i = index"
+      class="mb-2"
+    >
+      <ng-container [formGroupName]="control.controlInstance">
+        <form
+          formGroupName="testcaseDescription"
+          class="flex flex-col w-full gap-2"
+        >
+          <p class="text-sm text-slate-800">
+            {{ scenariosForm.value[control.controlInstance]["testcaseName"] }}
+          </p>
+          <nz-input-group nzAddOnBefore="Dado que">
+            <input
+              formControlName="dado"
+              type="text"
+              nz-input
+              autocomplete="off"
+            />
+          </nz-input-group>
+          <nz-input-group nzAddOnBefore="Quando">
+            <input
+              formControlName="quando"
+              type="text"
+              nz-input
+              autocomplete="off"
+            />
+          </nz-input-group>
+          <nz-input-group nzAddOnBefore="Então">
+            <input
+              formControlName="entao"
+              type="text"
+              nz-input
+              autocomplete="off"
+            />
+          </nz-input-group>
+        </form>
+      </ng-container>
+    </nz-form-item>
+  </form>
+</div>
