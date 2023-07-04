@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { map } from 'rxjs';
+import { delay, map } from 'rxjs';
 import { ScenariosService } from 'src/app/core/services/scenarios/scenarios.service';
 
 @Component({
