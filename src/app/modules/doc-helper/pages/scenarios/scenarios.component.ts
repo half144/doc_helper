@@ -4,6 +4,8 @@ import { FormBuilder } from '@angular/forms';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import {
   BehaviorSubject,
+  combineLatest,
+  delay,
   distinctUntilChanged,
   map,
   startWith,
@@ -47,50 +49,50 @@ export class ScenariosComponent {
     )
     .subscribe();
 
-  filteredScenarios$ = this.scenarioFilterForm.valueChanges.pipe(
-    startWith(this.scenarioFilterForm.value),
-    distinctUntilChanged(),
-    switchMap((formValue) => {
-      return this.scenariosCached$.pipe(
-        map((scenarios) => {
-          return scenarios.filter((scenario: any) => {
-            const cardNumber = scenario.cardNumber
-              ? scenario.cardNumber.toLowerCase()
-              : '';
-            const sprint = scenario.sprint ? scenario.sprint.toLowerCase() : '';
-            const cardHolder = scenario.cardHolder
-              ? scenario.cardHolder.toLowerCase()
-              : '';
-            const cardReviewer = scenario.cardReviewer
-              ? scenario.cardReviewer.toLowerCase()
-              : '';
+  filtredScenario$ = combineLatest([
+    this.scenariosCached$,
+    this.scenarioFilterForm.valueChanges.pipe(
+      startWith(this.scenarioFilterForm.value),
+      distinctUntilChanged()
+    ),
+  ]).pipe(
+    map(([scenarios, formValue]) => {
+      return scenarios.filter((scenario: any) => {
+        const cardNumber = scenario.cardNumber
+          ? scenario.cardNumber.toLowerCase()
+          : '';
+        const sprint = scenario.sprint ? scenario.sprint.toLowerCase() : '';
+        const cardHolder = scenario.cardHolder
+          ? scenario.cardHolder.toLowerCase()
+          : '';
+        const cardReviewer = scenario.cardReviewer
+          ? scenario.cardReviewer.toLowerCase()
+          : '';
 
-            const filterCardNumber = formValue.cardNumber
-              ? formValue.cardNumber.toLowerCase()
-              : '';
-            const filterSprint = formValue.sprint
-              ? formValue.sprint.toLowerCase()
-              : '';
-            const filterCardHolder = formValue.cardHolder
-              ? formValue.cardHolder.toLowerCase()
-              : '';
-            const filterCardReviewer = formValue.cardReviewer
-              ? formValue.cardReviewer.toLowerCase()
-              : '';
+        const filterCardNumber = formValue.cardNumber
+          ? formValue.cardNumber.toLowerCase()
+          : '';
+        const filterSprint = formValue.sprint
+          ? formValue.sprint.toLowerCase()
+          : '';
+        const filterCardHolder = formValue.cardHolder
+          ? formValue.cardHolder.toLowerCase()
+          : '';
+        const filterCardReviewer = formValue.cardReviewer
+          ? formValue.cardReviewer.toLowerCase()
+          : '';
 
-            return (
-              cardNumber.includes(filterCardNumber) &&
-              sprint.includes(filterSprint) &&
-              cardHolder.includes(filterCardHolder) &&
-              cardReviewer.includes(filterCardReviewer)
-            );
-          });
-        })
-      );
+        return (
+          cardNumber.includes(filterCardNumber) &&
+          sprint.includes(filterSprint) &&
+          cardHolder.includes(filterCardHolder) &&
+          cardReviewer.includes(filterCardReviewer)
+        );
+      });
     })
   );
 
-  scenarios = toSignal(this.filteredScenarios$);
+  scenarios = toSignal(this.filtredScenario$);
 
   deleteScenario(scenarioId: any) {
     this.modal.confirm({
