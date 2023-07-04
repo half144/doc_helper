@@ -38,9 +38,9 @@ export class HttpCacheService {
   }
 
   public invalidateCache(url: string) {
+    this.refresh$.next(null);
     const cachedStore: any = this.store();
     delete cachedStore[url];
     this.store.set(cachedStore);
-    this.refresh$.next(null);
   }
 }
