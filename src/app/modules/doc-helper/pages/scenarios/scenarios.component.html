@@ -6,10 +6,14 @@
   </div>
   <div class="p-4 flex flex-col gap-2 border rounded">
     <h1 class="text-base text-slate-800">Pesquisar</h1>
-    <form class="flex flex-col">
+    <form [formGroup]="scenarioFilterForm" class="flex flex-col">
       <div class="flex gap-5">
-        <input nz-input placeholder="Número do Card" />
-        <input nz-input placeholder="Sprint" />
+        <input
+          formControlName="cardNumber"
+          nz-input
+          placeholder="Número do Card"
+        />
+        <input formControlName="sprint" nz-input placeholder="Sprint" />
         <nz-select
           class="w-full"
           nzShowSearch
@@ -39,7 +43,7 @@
             nzValue="Wellington Martins Ferreira"
           ></nz-option>
         </nz-select>
-        <input nz-input placeholder="Revisor" />
+        <input formControlName="cardReviewer" nz-input placeholder="Revisor" />
         <nz-select class="w-full" nzPlaceHolder="Estado">
           <nz-option nzLabel="Concluido" nzValue="concluded"></nz-option>
           <nz-option nzLabel="Em andamento" nzValue="inProgress"></nz-option>
