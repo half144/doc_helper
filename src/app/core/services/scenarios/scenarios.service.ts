@@ -23,8 +23,17 @@ export class ScenariosService {
   saveScenario(scenario: any) {
     return this.http.post(`${URL}scenarios`, scenario).pipe(
       tap(() => {
-        this.httpCache.refetch(`${URL}scenarios`);
+        this.httpCache.invalidateCache(`${URL}scenarios`);
         this.httpCache.invalidateCache(`${URL}scenarios/${scenario.id}`);
+      })
+    );
+  }
+
+  deleteScenario(id: string) {
+    return this.http.delete(`${URL}scenarios/${id}`).pipe(
+      tap(() => {
+        this.httpCache.invalidateCache(`${URL}scenarios`);
+        this.httpCache.invalidateCache(`${URL}scenarios/${id}`);
       })
     );
   }

@@ -17,6 +17,7 @@ import { ScenariosComponent } from './pages/scenarios/scenarios.component';
 import { NzListModule } from 'ng-zorro-antd/list';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { EditComponent } from './pages/edit/edit.component';
+import { NzModalModule } from 'ng-zorro-antd/modal';
 
 @NgModule({
   declarations: [
@@ -40,6 +41,7 @@ import { EditComponent } from './pages/edit/edit.component';
     NzPopconfirmModule,
     NzListModule,
     NzCardModule,
+    NzModalModule,
   ],
   exports: [DocHelperComponent],
 })

@@ -88,6 +88,9 @@
                 </p>
               </div>
               <div class="flex items-end justify-end gap-2">
+                <button nz-button (click)="deleteScenario(item._id)">
+                  Deletar
+                </button>
                 <button [routerLink]="['edit', item._id]" nz-button>
                   Editar
                 </button>

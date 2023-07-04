@@ -1,7 +1,9 @@
 import { Component, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder } from '@angular/forms';
+import { NzModalService } from 'ng-zorro-antd/modal';
 import {
+  BehaviorSubject,
   delay,
   distinctUntilChanged,
   map,
@@ -19,6 +21,7 @@ import { ScenariosService } from 'src/app/core/services/scenarios/scenarios.serv
 export class ScenariosComponent {
   scenariosService = inject(ScenariosService);
   formBuilder = inject(FormBuilder);
+  modal = inject(NzModalService);
 
   scenarioFilterForm = this.formBuilder.group({
     cardNumber: [''],
@@ -82,4 +85,18 @@ export class ScenariosComponent {
   );
 
   scenarios = toSignal(this.filteredScenarios$);
+
+  deleteScenario(scenarioId: any) {
+    this.modal.confirm({
+      nzTitle: 'Are you sure delete this scenario?',
+      nzContent: '<b class="text-red-500">This action is irreversible</b>',
+      nzOkText: 'Yes',
+      nzOkDanger: true,
+      nzOnOk: () => {
+        this.scenariosService.deleteScenario(scenarioId).subscribe();
+      },
+      nzCancelText: 'No',
+      nzOnCancel: () => console.log('Cancel'),
+    });
+  }
 }
