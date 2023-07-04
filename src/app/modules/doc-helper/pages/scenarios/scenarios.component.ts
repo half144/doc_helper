@@ -1,10 +1,9 @@
-import { Component, inject, signal } from '@angular/core';
-import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { Component, inject } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder } from '@angular/forms';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import {
   BehaviorSubject,
-  delay,
   distinctUntilChanged,
   map,
   startWith,
@@ -30,23 +29,23 @@ export class ScenariosComponent {
     cardReviewer: [''],
   });
 
-  scenariosCached = signal([] as any);
-  scenarios$ = this.scenariosService.getAllScenarios().pipe(
-    map((scenarios) => {
-      return scenarios.map((scenario: any) => {
-        return {
-          ...scenario,
-          cardTitle: `Card ${scenario.cardNumber} - Sprint ${scenario.sprint}`,
-        };
-      });
-    }),
-    tap((scenarios) => {
-      this.scenariosCached.set(scenarios);
-    })
-  );
-
-  readonly scenariosSub = toSignal(this.scenarios$);
-  readonly scenariosCached$ = toObservable(this.scenariosCached);
+  scenariosCached$ = new BehaviorSubject([] as any[]);
+  scenarios$ = this.scenariosService
+    .getAllScenarios()
+    .pipe(
+      map((scenarios) => {
+        return scenarios.map((scenario: any) => {
+          return {
+            ...scenario,
+            cardTitle: `Card ${scenario.cardNumber} - Sprint ${scenario.sprint}`,
+          };
+        });
+      }),
+      tap((scenarios) => {
+        this.scenariosCached$.next(scenarios);
+      })
+    )
+    .subscribe();
 
   filteredScenarios$ = this.scenarioFilterForm.valueChanges.pipe(
     startWith(this.scenarioFilterForm.value),
@@ -100,6 +99,11 @@ export class ScenariosComponent {
       nzOkText: 'Yes',
       nzOkDanger: true,
       nzOnOk: () => {
+        this.scenariosCached$.next(
+          this.scenariosCached$.value.filter(
+            (scenario: any) => scenario.id !== scenarioId
+          )
+        );
         this.scenariosService.deleteScenario(scenarioId).subscribe();
       },
       nzCancelText: 'No',
