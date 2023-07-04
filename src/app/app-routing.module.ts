@@ -9,6 +9,13 @@ const routes: Routes = [
         (m) => m.DocHelperModule
       ),
   },
+  {
+    path: 'auth',
+    loadChildren: () =>
+      import('./modules/authentication/authentication.module').then(
+        (m) => m.AuthenticationModule
+      ),
+  },
 ];
 
 @NgModule({

@@ -31,7 +31,7 @@ export class ScenariosComponent {
     cardReviewer: [''],
   });
 
-  scenariosCached$ = new BehaviorSubject([] as any[]);
+  scenariosCached$ = new BehaviorSubject<any[] | null>(null);
   scenarios$ = this.scenariosService
     .getAllScenarios()
     .pipe(
@@ -59,7 +59,7 @@ export class ScenariosComponent {
     map(([scenarios, formValue]) => {
       console.log('scenarios', scenarios);
 
-      return scenarios.filter((scenario: any) => {
+      return scenarios?.filter((scenario: any) => {
         const cardNumber = scenario.cardNumber
           ? scenario.cardNumber.toLowerCase()
           : '';
@@ -103,6 +103,7 @@ export class ScenariosComponent {
       nzOkText: 'Yes',
       nzOkDanger: true,
       nzOnOk: () => {
+        if (!this.scenariosCached$.value) return;
         this.scenariosCached$.next(
           this.scenariosCached$.value.filter(
             (scenario: any) => scenario._id !== scenarioId
