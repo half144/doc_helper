@@ -30,11 +30,6 @@ export class ScenariosService {
   }
 
   deleteScenario(id: string) {
-    return this.http.delete(`${URL}scenarios/${id}`).pipe(
-      tap(() => {
-        this.httpCache.invalidateCache(`${URL}scenarios`);
-        this.httpCache.invalidateCache(`${URL}scenarios/${id}`);
-      })
-    );
+    return this.http.delete(`${URL}scenarios/${id}`);
   }
 }

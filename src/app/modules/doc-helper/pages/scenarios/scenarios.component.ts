@@ -57,6 +57,8 @@ export class ScenariosComponent {
     ),
   ]).pipe(
     map(([scenarios, formValue]) => {
+      console.log('scenarios', scenarios);
+
       return scenarios.filter((scenario: any) => {
         const cardNumber = scenario.cardNumber
           ? scenario.cardNumber.toLowerCase()
@@ -103,7 +105,7 @@ export class ScenariosComponent {
       nzOnOk: () => {
         this.scenariosCached$.next(
           this.scenariosCached$.value.filter(
-            (scenario: any) => scenario.id !== scenarioId
+            (scenario: any) => scenario._id !== scenarioId
           )
         );
         this.scenariosService.deleteScenario(scenarioId).subscribe();
