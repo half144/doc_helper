@@ -1,5 +1,5 @@
-import { Component, inject } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { Component, inject, signal } from '@angular/core';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder } from '@angular/forms';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import {
@@ -30,6 +30,7 @@ export class ScenariosComponent {
     cardReviewer: [''],
   });
 
+  scenariosCached = signal([] as any);
   scenarios$ = this.scenariosService.getAllScenarios().pipe(
     map((scenarios) => {
       return scenarios.map((scenario: any) => {
@@ -38,14 +39,20 @@ export class ScenariosComponent {
           cardTitle: `Card ${scenario.cardNumber} - Sprint ${scenario.sprint}`,
         };
       });
+    }),
+    tap((scenarios) => {
+      this.scenariosCached.set(scenarios);
     })
   );
+
+  readonly scenariosSub = toSignal(this.scenarios$);
+  readonly scenariosCached$ = toObservable(this.scenariosCached);
 
   filteredScenarios$ = this.scenarioFilterForm.valueChanges.pipe(
     startWith(this.scenarioFilterForm.value),
     distinctUntilChanged(),
     switchMap((formValue) => {
-      return this.scenarios$.pipe(
+      return this.scenariosCached$.pipe(
         map((scenarios) => {
           return scenarios.filter((scenario: any) => {
             const cardNumber = scenario.cardNumber
