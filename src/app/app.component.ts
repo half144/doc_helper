@@ -3,8 +3,12 @@ import { Component } from '@angular/core';
 @Component({
   selector: 'app-root',
   template: `
-    <app-header></app-header>
-    <router-outlet class="w-screen"></router-outlet>
+    <div>
+      <app-header data-carbon-theme="g100"></app-header>
+      <div class="mt-20">
+        <router-outlet class="w-screen"></router-outlet>
+      </div>
+    </div>
   `,
 })
 export class AppComponent {

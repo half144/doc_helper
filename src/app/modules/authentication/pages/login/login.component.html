@@ -1,1 +1,35 @@
-<p>login works!</p>
+<div class="flex h-[calc(100vh-200px)] items-center justify-center">
+  <form
+    [formGroup]="loginForm"
+    (ngSubmit)="login()"
+    class="max-w-[500px] w-3/4 flex flex-col gap-5 p-8 py-10"
+  >
+    <div class="mb-3">
+      <h1 class="text-xl font-bold">Login</h1>
+      <p class="text-sm">Faça login para usar o DocHelper</p>
+    </div>
+
+    <ibm-label class="w-full">
+      Usuário
+      <input
+        formControlName="username"
+        theme="light"
+        ibmText
+        size="sm"
+        placeholder="Usuário"
+      />
+    </ibm-label>
+    <ibm-label class="w-full mb-3">
+      Senha
+      <input
+        formControlName="password"
+        theme="light"
+        ibmText
+        type="password"
+        size="sm"
+        placeholder="Senha"
+      />
+    </ibm-label>
+    <button size="sm" ibmButton="primary">Login</button>
+  </form>
+</div>

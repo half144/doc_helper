@@ -15,7 +15,10 @@ export class HttpCacheService {
     const cachedStore: any = this.store();
     const cache = cachedStore[url];
 
+    console.log(url, params, cache);
+
     if (cache) {
+      console.log('cache hit');
       return of(cache);
     }
 
@@ -38,9 +41,11 @@ export class HttpCacheService {
   }
 
   public invalidateCache(url: string) {
+    this.store.set({
+      ...this.store(),
+      [url]: null,
+    });
+
     this.refresh$.next(null);
-    const cachedStore: any = this.store();
-    delete cachedStore[url];
-    this.store.set(cachedStore);
   }
 }

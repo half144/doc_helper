@@ -13,6 +13,16 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DocHelperModule } from './modules/doc-helper/doc-helper.module';
 import { HeaderComponent } from './shared/components/header/header.component';
 import { CoreModule } from './core/core.module';
+import {
+  HeaderModule,
+  SideNavModule,
+  UIShellModule,
+  SearchModule,
+  DialogModule,
+  ThemeModule,
+  IconModule,
+} from 'carbon-components-angular';
+import { NzIconModule } from 'ng-zorro-antd/icon';
 
 registerLocaleData(pt);
 
@@ -26,6 +36,14 @@ registerLocaleData(pt);
     BrowserAnimationsModule,
     DocHelperModule,
     CoreModule,
+    HeaderModule,
+    SideNavModule,
+    UIShellModule,
+    SearchModule,
+    DialogModule,
+    ThemeModule,
+    NzIconModule,
+    IconModule,
   ],
   providers: [{ provide: NZ_I18N, useValue: pt_BR }],
   bootstrap: [AppComponent],

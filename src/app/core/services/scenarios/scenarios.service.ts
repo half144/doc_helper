@@ -3,6 +3,7 @@ import { Injectable, inject } from '@angular/core';
 import { Observable, tap } from 'rxjs';
 import { URL } from '../../constants';
 import { HttpCacheService } from '../../cache/http-cache.service';
+import { AuthService } from '../../authentication/auth.service';
 
 @Injectable({
   providedIn: 'root',
@@ -10,6 +11,7 @@ import { HttpCacheService } from '../../cache/http-cache.service';
 export class ScenariosService {
   httpCache = inject(HttpCacheService);
   http = inject(HttpClient);
+  authService = inject(AuthService);
 
   getScenarioById(id: string): Observable<any> {
     console.log('getScenarioById', id);
@@ -21,12 +23,16 @@ export class ScenariosService {
   }
 
   saveScenario(scenario: any) {
-    return this.http.post(`${URL}scenarios`, scenario).pipe(
-      tap(() => {
-        this.httpCache.invalidateCache(`${URL}scenarios`);
-        this.httpCache.invalidateCache(`${URL}scenarios/${scenario.id}`);
+    return this.http
+      .post(`${URL}scenarios`, scenario, {
+        headers: this.authService.getHeaderWithToken(),
       })
-    );
+      .pipe(
+        tap(() => {
+          this.httpCache.invalidateCache(`${URL}scenarios`);
+          this.httpCache.invalidateCache(`${URL}scenarios/${scenario.id}`);
+        })
+      );
   }
 
   deleteScenario(id: string) {

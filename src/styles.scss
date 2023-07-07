@@ -1,0 +1,20 @@
+@use "@carbon/styles";
+
+@use "@carbon/themes/scss/themes" as *;
+@use "@carbon/themes";
+
+[data-carbon-theme="g10"] {
+  @include themes.theme($g10);
+}
+
+[data-carbon-theme="g90"] {
+  @include themes.theme($g90);
+}
+
+[data-carbon-theme="g100"] {
+  @include themes.theme($g100);
+}
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;

@@ -18,6 +18,12 @@ import { NzListModule } from 'ng-zorro-antd/list';
 import { NzCardModule } from 'ng-zorro-antd/card';
 import { EditComponent } from './pages/edit/edit.component';
 import { NzModalModule } from 'ng-zorro-antd/modal';
+import {
+  ButtonModule,
+  IconModule,
+  TilesModule,
+} from 'carbon-components-angular';
+import { InputModule, SelectModule } from 'carbon-components-angular';
 
 @NgModule({
   declarations: [
@@ -42,6 +48,11 @@ import { NzModalModule } from 'ng-zorro-antd/modal';
     NzListModule,
     NzCardModule,
     NzModalModule,
+    ButtonModule,
+    InputModule,
+    SelectModule,
+    TilesModule,
+    IconModule,
   ],
   exports: [DocHelperComponent],
 })

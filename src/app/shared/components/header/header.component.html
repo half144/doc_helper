@@ -1,12 +1,46 @@
-<header
-  class="bg-blue-600 h-[60px] text-white flex items-center justify-between px-16"
->
-  <div>
-    <h1 class="text-white text-lg">DocHelper</h1>
-  </div>
-  <div>
-    <div class="bg-white p-1 rounded-md">
-      <img class="w-[120px]" src="assets/petrobras.png" alt="" />
+<ibm-header brand="QA" name="DocHelper" [route]="['']">
+  <ibm-header-navigation *ngIf="authService.isAuthenticated()">
+    <div (click)="handleSelect()">
+      <ibm-hamburger [active]="isSideBarOpen" *ngIf="true"></ibm-hamburger>
     </div>
-  </div>
-</header>
+
+    <ibm-header-item
+      [isCurrentPage]="currentPath() == 'create'"
+      [route]="['create']"
+      >Criar cenário</ibm-header-item
+    >
+    <ibm-header-item [isCurrentPage]="currentPath() == 'bar'" [route]="['bar']"
+      >Docs</ibm-header-item
+    >
+    <ibm-header-item [isCurrentPage]="currentPath() == 'foo'" [route]="['foo']"
+      >Suporte</ibm-header-item
+    >
+    <ibm-header-menu ibmTheme="g100" title="Meus projetos">
+      <ibm-header-item [route]="['foo']">Link 1</ibm-header-item>
+      <ibm-header-item [route]="['bar']">Link 2</ibm-header-item>
+      <ibm-header-item [route]="['foo']">Link 3</ibm-header-item>
+    </ibm-header-menu>
+  </ibm-header-navigation>
+  <ibm-header-global>
+    <ibm-header-action *ngIf="authService.isAuthenticated()" title="action">
+      <span nz-icon nzType="user" class="text-white text-base"></span>
+    </ibm-header-action>
+    <ibm-header-action *ngIf="authService.isAuthenticated()" title="action">
+      <div
+        class="w-full h-full flex items-center justify-center"
+        (click)="logout()"
+      >
+        <span nz-icon nzType="logout" class="text-white text-base"></span>
+      </div>
+    </ibm-header-action>
+  </ibm-header-global>
+</ibm-header>
+<ibm-sidenav *ngIf="isSideBarOpen" ibmTheme="white" class="mt-[47px]">
+  <ibm-sidenav-item [route]="['foo']"> Link </ibm-sidenav-item>
+  <ibm-sidenav-item [route]="['bar']"> Link </ibm-sidenav-item>
+  <ibm-sidenav-menu title="Category title">
+    <ibm-sidenav-item [route]="['foo']">Link</ibm-sidenav-item>
+    <ibm-sidenav-item [route]="['bar']">Link</ibm-sidenav-item>
+    <ibm-sidenav-item [route]="['foo']">Link</ibm-sidenav-item>
+  </ibm-sidenav-menu>
+</ibm-sidenav>

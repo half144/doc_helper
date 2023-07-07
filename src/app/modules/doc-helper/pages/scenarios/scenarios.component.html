@@ -1,105 +1,92 @@
-<div class="flex flex-col px-10 py-6 gap-5">
-  <div>
-    <button nzType="primary" [routerLink]="['create']" nz-button>
-      Criar cenario
-    </button>
-  </div>
-  <div class="p-4 flex flex-col gap-2 border rounded">
-    <h1 class="text-base text-slate-800">Pesquisar</h1>
+<div class="flex flex-col px-10 gap-6 container mx-auto">
+  <div class="flex flex-col gap-2">
+    <h1 class="text-base text-black">Filtrar cenários:</h1>
     <form [formGroup]="scenarioFilterForm" class="flex flex-col">
       <div class="flex gap-5">
-        <input
-          formControlName="cardNumber"
-          nz-input
-          placeholder="Número do Card"
-        />
-        <input formControlName="sprint" nz-input placeholder="Sprint" />
-        <nz-select
-          class="w-full"
-          nzShowSearch
-          nzAllowClear
-          nzPlaceHolder="Desenvolvedor responsável"
+        <ibm-label class="w-full">
+          Número do Card
+          <input
+            formControlName="cardNumber"
+            ibmText
+            size="sm"
+            placeholder="Número do Card"
+          />
+        </ibm-label>
+        <ibm-label class="w-full">
+          Sprint
+          <input
+            formControlName="sprint"
+            ibmText
+            size="sm"
+            placeholder="Sprint"
+          />
+        </ibm-label>
+        <ibm-select
           formControlName="cardHolder"
+          class="w-full"
+          size="md"
+          label="Desenvolvedor"
         >
-          <nz-option
-            nzLabel="Ana Toledo Lobo Maia"
-            nzValue="Ana Toledo Lobo Maia"
-          ></nz-option>
-          <nz-option
-            nzLabel="Bruno Silva Bandeira"
-            nzValue="Bruno Silva Bandeirao"
-          ></nz-option>
-          <nz-option
-            nzLabel="Vander Luis Figueiredo Toso"
-            nzValue="Vander Luis Figueiredo Toso"
-          ></nz-option>
-          <nz-option
-            nzLabel="Victor Hugo Oliveira da Silva"
-            nzValue="Victor Hugo Oliveira da Silva"
-          ></nz-option>
-          <nz-option nzLabel="Wallace Reis" nzValue="Wallace Reis"></nz-option>
-          <nz-option
-            nzLabel="Wellington Martins Ferreira"
-            nzValue="Wellington Martins Ferreira"
-          ></nz-option>
-        </nz-select>
-        <input formControlName="cardReviewer" nz-input placeholder="Revisor" />
-        <nz-select class="w-full" nzPlaceHolder="Estado">
-          <nz-option nzLabel="Concluido" nzValue="concluded"></nz-option>
-          <nz-option nzLabel="Em andamento" nzValue="inProgress"></nz-option>
-          <nz-option nzLabel="Pendente" nzValue="pending"></nz-option>
-        </nz-select>
+          <option selected value="">Todos</option>
+          <option value="Ana Toledo Lobo Maia">Ana Toledo Lobo Maia</option>
+          <option value="Bruno Silva Bandeira">Bruno Silva Bandeira</option>
+        </ibm-select>
+        <ibm-label class="w-full">
+          Revisor
+          <input
+            formControlName="cardReviwer"
+            ibmText
+            size="sm"
+            placeholder="Revisor"
+          />
+        </ibm-label>
+        <ibm-select class="w-full" size="md" label="Desenvolvedor">
+          <option value="" disabled selected hidden>Choose an option</option>
+          <option value="ana">Ana Toledo Maia</option>
+          <option value="bruno">Bruno de Souza</option>
+        </ibm-select>
       </div>
     </form>
   </div>
-  <nz-list nzGrid>
-    <div nz-row [nzGutter]="16">
-      <ng-container *ngIf="!scenarios()">
-        <div
-          class="rounded-lg"
-          nz-col
-          [nzSpan]="6"
-          *ngFor="let item of ['', '', '', '']"
-        >
-          <nz-list-item>
-            <nz-card>
-              <nz-card-loading></nz-card-loading>
-            </nz-card>
-          </nz-list-item>
-        </div>
-      </ng-container>
-
+  <hr />
+  <div class="flex flex-col gap-5">
+    <div class="flex justify-between items-center">
+      <h1 class="text-blue-600 font-medium text-3xl">Cenários de teste:</h1>
+      <button size="sm" [routerLink]="['create']" ibmButton="primary">
+        Criar cenário
+      </button>
+    </div>
+    <div>
       <div
-        class="rounded-lg"
-        nz-col
-        [nzSpan]="6"
-        *ngFor="let item of scenarios()"
+        *ngIf="scenarios()?.length"
+        class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 py-2"
       >
-        <nz-list-item>
-          <nz-card [nzTitle]="item.cardTitle">
+        <div class="rounded-lg" *ngFor="let item of scenarios()">
+          <ibm-clickable-tile [route]="['edit', item._id]">
             <div class="flex flex-col gap-8">
               <div>
+                <h1 class="text-xl mb-3">{{ item.cardTitle }}</h1>
                 <p>
                   Desenvolvedor:
                   <span class="font-bold">{{ item.cardHolder }}</span>
                 </p>
                 <p>
-                  Revisor: <span class="font-bold">{{ item.cardReviwer }}</span>
+                  Revisor:
+                  <span class="font-bold">{{ item.cardReviwer }}</span>
                 </p>
-              </div>
-              <div class="flex items-end justify-end gap-2">
-                <button nz-button (click)="deleteScenario(item._id)">
-                  Deletar
-                </button>
-                <button [routerLink]="['edit', item._id]" nz-button>
-                  Editar
-                </button>
-                <button nz-button nzType="dashed">Evidenciar</button>
+                <div class="flex w-full justify-end items-center">
+                  <span
+                    class="self-end mt-10 text-lg text-blue-600"
+                    nz-icon
+                    nzType="arrow-right"
+                    nzTheme="outline"
+                  ></span>
+                </div>
               </div>
             </div>
-          </nz-card>
-        </nz-list-item>
+          </ibm-clickable-tile>
+        </div>
       </div>
     </div>
-  </nz-list>
+  </div>
 </div>

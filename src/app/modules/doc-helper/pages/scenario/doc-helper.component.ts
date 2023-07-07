@@ -3,6 +3,7 @@ import { FormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import jsPDF from 'jspdf';
 import { catchError, take, tap } from 'rxjs';
 import { ScenariosService } from 'src/app/core/services/scenarios/scenarios.service';
+import * as html2pdf from 'html2pdf.js';
 
 @Component({
   selector: 'app-doc-helper',
@@ -113,6 +114,22 @@ export class DocHelperComponent implements OnInit {
     const srcWidth = html.scrollWidth;
     const pWidth = doc.internal.pageSize.getWidth();
     const scale = (pWidth - 1 * 2) / Math.ceil(srcWidth);
+
+    // const options = {
+    //   filename: `Cenários CARD-${this.cardInfoForm.value.cardNumber}|SPRINT=${
+    //     this.cardInfoForm.value.sprint
+    //   }-${new Date().toISOString()}.pdf`,
+    //   html2canvas: {
+    //     scale: 2,
+    //   },
+    //   jsPDF: {
+    //     unit: 'mm',
+    //     format: 'a4',
+    //     orientation: 'portrait',
+    //   },
+    // };
+
+    // html2pdf().set(options).from(html).save();
 
     doc.html(html!, {
       autoPaging: 'text',

@@ -1,15 +1,14 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder } from '@angular/forms';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import {
   BehaviorSubject,
   combineLatest,
-  delay,
   distinctUntilChanged,
+  filter,
   map,
   startWith,
-  switchMap,
   tap,
 } from 'rxjs';
 import { ScenariosService } from 'src/app/core/services/scenarios/scenarios.service';
@@ -19,82 +18,40 @@ import { ScenariosService } from 'src/app/core/services/scenarios/scenarios.serv
   templateUrl: './scenarios.component.html',
   styleUrls: ['./scenarios.component.css'],
 })
-export class ScenariosComponent {
-  scenariosService = inject(ScenariosService);
+export class ScenariosComponent implements OnInit {
   formBuilder = inject(FormBuilder);
   modal = inject(NzModalService);
+  scenariosService = inject(ScenariosService);
 
   scenarioFilterForm = this.formBuilder.group({
     cardNumber: [''],
     sprint: [''],
     cardHolder: [''],
-    cardReviewer: [''],
+    cardReviwer: [''],
   });
 
-  scenariosCached$ = new BehaviorSubject<any[] | null>(null);
-  scenarios$ = this.scenariosService
-    .getAllScenarios()
-    .pipe(
-      map((scenarios) => {
-        return scenarios.map((scenario: any) => {
-          return {
-            ...scenario,
-            cardTitle: `Card ${scenario.cardNumber} - Sprint ${scenario.sprint}`,
-          };
-        });
-      }),
-      tap((scenarios) => {
-        this.scenariosCached$.next(scenarios);
-      })
-    )
-    .subscribe();
-
-  filtredScenario$ = combineLatest([
-    this.scenariosCached$,
+  private scenariosBruteData$ = new BehaviorSubject<any[] | null>(null);
+  private filtredScenario$ = combineLatest([
+    this.scenariosBruteData$,
     this.scenarioFilterForm.valueChanges.pipe(
       startWith(this.scenarioFilterForm.value),
       distinctUntilChanged()
     ),
   ]).pipe(
-    map(([scenarios, formValue]) => {
-      console.log('scenarios', scenarios);
-
-      return scenarios?.filter((scenario: any) => {
-        const cardNumber = scenario.cardNumber
-          ? scenario.cardNumber.toLowerCase()
-          : '';
-        const sprint = scenario.sprint ? scenario.sprint.toLowerCase() : '';
-        const cardHolder = scenario.cardHolder
-          ? scenario.cardHolder.toLowerCase()
-          : '';
-        const cardReviewer = scenario.cardReviewer
-          ? scenario.cardReviewer.toLowerCase()
-          : '';
-
-        const filterCardNumber = formValue.cardNumber
-          ? formValue.cardNumber.toLowerCase()
-          : '';
-        const filterSprint = formValue.sprint
-          ? formValue.sprint.toLowerCase()
-          : '';
-        const filterCardHolder = formValue.cardHolder
-          ? formValue.cardHolder.toLowerCase()
-          : '';
-        const filterCardReviewer = formValue.cardReviewer
-          ? formValue.cardReviewer.toLowerCase()
-          : '';
-
-        return (
-          cardNumber.includes(filterCardNumber) &&
-          sprint.includes(filterSprint) &&
-          cardHolder.includes(filterCardHolder) &&
-          cardReviewer.includes(filterCardReviewer)
-        );
-      });
-    })
+    filter(([scenarios]) => !!scenarios),
+    map(([scenarios, formValue]) => this.filterScenarios(scenarios!, formValue))
   );
-
   scenarios = toSignal(this.filtredScenario$);
+
+  ngOnInit(): void {
+    this.scenariosService
+      .getAllScenarios()
+      .pipe(
+        map((scenarios) => this.mapScenarioToRender(scenarios)),
+        tap((mappedScenarios) => this.scenariosBruteData$.next(mappedScenarios))
+      )
+      .subscribe();
+  }
 
   deleteScenario(scenarioId: any) {
     this.modal.confirm({
@@ -103,9 +60,9 @@ export class ScenariosComponent {
       nzOkText: 'Yes',
       nzOkDanger: true,
       nzOnOk: () => {
-        if (!this.scenariosCached$.value) return;
-        this.scenariosCached$.next(
-          this.scenariosCached$.value.filter(
+        if (!this.scenariosBruteData$.value) return;
+        this.scenariosBruteData$.next(
+          this.scenariosBruteData$.value.filter(
             (scenario: any) => scenario._id !== scenarioId
           )
         );
@@ -113,6 +70,48 @@ export class ScenariosComponent {
       },
       nzCancelText: 'No',
       nzOnCancel: () => console.log('Cancel'),
+    });
+  }
+
+  private mapScenarioToRender(scenarios: any[]) {
+    return scenarios.map((scenario: any) => ({
+      ...scenario,
+      cardTitle: `Card ${scenario.cardNumber} - Sprint ${scenario.sprint}`,
+    }));
+  }
+
+  private filterScenarios(scenarios: any[], formValue: any) {
+    return scenarios?.filter((scenario: any) => {
+      const cardNumber = scenario.cardNumber
+        ? scenario.cardNumber.toLowerCase()
+        : '';
+      const sprint = scenario.sprint ? scenario.sprint.toLowerCase() : '';
+      const cardHolder = scenario.cardHolder
+        ? scenario.cardHolder.toLowerCase()
+        : '';
+      const cardReviwer = scenario.cardReviwer
+        ? scenario.cardReviwer.toLowerCase()
+        : '';
+
+      const filterCardNumber = formValue.cardNumber
+        ? formValue.cardNumber.toLowerCase()
+        : '';
+      const filterSprint = formValue.sprint
+        ? formValue.sprint.toLowerCase()
+        : '';
+      const filterCardHolder = formValue.cardHolder
+        ? formValue.cardHolder.toLowerCase()
+        : '';
+      const filterCardReviwer = formValue.cardReviwer
+        ? formValue.cardReviwer.toLowerCase()
+        : '';
+
+      return (
+        cardNumber.includes(filterCardNumber) &&
+        sprint.includes(filterSprint) &&
+        cardHolder.includes(filterCardHolder) &&
+        cardReviwer.includes(filterCardReviwer)
+      );
     });
   }
 }
