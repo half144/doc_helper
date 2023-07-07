@@ -18,19 +18,17 @@ export class AuthService {
 
   getMe() {
     const headers = this.getHeaderWithToken();
-    return this.http
-      .get<any>('http://localhost:3000/auth/me', { headers })
-      .pipe(
-        take(1),
-        tap((user) => {
-          if (!user) return;
-          this.currentUser.set(user);
-        }),
-        catchError((err) => {
-          this.logout();
-          return throwError(() => new Error(err));
-        })
-      );
+    return this.http.get<any>(`${URL}auth/me`, { headers }).pipe(
+      take(1),
+      tap((user) => {
+        if (!user) return;
+        this.currentUser.set(user);
+      }),
+      catchError((err) => {
+        this.logout();
+        return throwError(() => new Error(err));
+      })
+    );
   }
 
   login(username: string, password: string) {
