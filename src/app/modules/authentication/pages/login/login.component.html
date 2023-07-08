@@ -2,34 +2,78 @@
   <form
     [formGroup]="loginForm"
     (ngSubmit)="login()"
-    class="max-w-[500px] w-3/4 flex flex-col gap-5 p-8 py-10"
+    class="max-w-[500px] w-full flex flex-col gap-5 p-8 py-10"
   >
     <div class="mb-3">
       <h1 class="text-xl font-bold">Login</h1>
       <p class="text-sm">Faça login para usar o DocHelper</p>
     </div>
 
-    <ibm-label class="w-full">
-      Usuário
+    <div>
+      <ibm-label class="w-full">
+        Usuário
+        <input
+          formControlName="username"
+          theme="light"
+          ibmText
+          size="sm"
+          placeholder="Usuário"
+        />
+      </ibm-label>
+      <span
+        class="text-sm text-red-500"
+        *ngIf="
+          !!loginForm.get('username')?.errors &&
+          !!loginForm.get('username')?.touched
+        "
+      >
+        <span> O campo usuário é obrigatório </span>
+      </span>
+    </div>
+
+    <div>
+      <ibm-label class="w-full">
+        Senha
+        <input
+          formControlName="password"
+          theme="light"
+          ibmText
+          type="password"
+          size="sm"
+          placeholder="Senha"
+        />
+      </ibm-label>
+      <span
+        class="text-sm text-red-500"
+        *ngIf="
+          !!loginForm.get('password')?.errors &&
+          !!loginForm.get('password')?.touched
+        "
+      >
+        <span> O campo senha é obrigatório </span>
+      </span>
+    </div>
+    <span class="flex items-center gap-2">
       <input
-        formControlName="username"
-        theme="light"
-        ibmText
-        size="sm"
-        placeholder="Usuário"
+        class="accent-black cursor-pointer"
+        type="checkbox"
+        (change)="handleStayConnectedChange($event)"
+        name="remember"
+        id="remember"
       />
-    </ibm-label>
-    <ibm-label class="w-full mb-3">
-      Senha
-      <input
-        formControlName="password"
-        theme="light"
-        ibmText
-        type="password"
-        size="sm"
-        placeholder="Senha"
-      />
-    </ibm-label>
+      <label class="text-sm cursor-pointer" for="remember"
+        >Continuar conectado?</label
+      >
+    </span>
+    <span class="text-sm">
+      Não possui uma conta?
+      <span class="text-blue-500 cursor-pointer" [routerLink]="['/register']"
+        >Registre-se</span
+      >
+    </span>
+    <span class="text-sm text-red-500" *ngIf="error()">
+      {{ error() }}
+    </span>
     <button size="sm" ibmButton="primary">Login</button>
   </form>
 </div>

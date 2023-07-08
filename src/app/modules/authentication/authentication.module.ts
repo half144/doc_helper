@@ -4,9 +4,10 @@ import { LoginComponent } from './pages/login/login.component';
 import { AuthenticationRoutingModule } from './authentication-routing.module';
 import { InputModule, ButtonModule } from 'carbon-components-angular';
 import { ReactiveFormsModule } from '@angular/forms';
+import { RegisterComponent } from './pages/register/register.component';
 
 @NgModule({
-  declarations: [LoginComponent],
+  declarations: [LoginComponent, RegisterComponent],
   imports: [
     CommonModule,
     AuthenticationRoutingModule,

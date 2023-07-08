@@ -1,7 +1,7 @@
-import { Component, inject } from '@angular/core';
-import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { Component, inject, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router } from '@angular/router';
-import { Observable, filter, map, take, tap } from 'rxjs';
+import { filter, map } from 'rxjs';
 import { AuthService } from 'src/app/core/authentication/auth.service';
 
 @Component({
@@ -12,10 +12,9 @@ import { AuthService } from 'src/app/core/authentication/auth.service';
 export class HeaderComponent {
   router = inject(Router);
   authService = inject(AuthService);
-  isSideBarOpen = false;
+  isSideBarOpen = signal(false);
 
   currentPath$ = this.router.events.pipe(
-    takeUntilDestroyed(),
     filter((event) => event instanceof NavigationEnd),
     map(() => this.router.url.split('/').pop())
   );
@@ -26,6 +25,6 @@ export class HeaderComponent {
   }
 
   handleSelect() {
-    this.isSideBarOpen = !this.isSideBarOpen;
+    this.isSideBarOpen.update((value) => !value);
   }
 }

@@ -1,0 +1,87 @@
+<div class="flex h-[calc(100vh-200px)] items-center justify-center">
+  <form
+    [formGroup]="registerForm"
+    (ngSubmit)="handleRegister()"
+    class="max-w-[500px] w-full flex flex-col gap-5 p-8 py-10"
+  >
+    <div class="mb-3">
+      <h1 class="text-xl font-bold">Registro</h1>
+      <p class="text-sm">Faça seu registro para usar o DocHelper</p>
+    </div>
+
+    <div>
+      <ibm-label class="w-full">
+        Usuário
+        <input
+          formControlName="username"
+          theme="light"
+          ibmText
+          size="sm"
+          placeholder="Usuário"
+        />
+      </ibm-label>
+      <span
+        class="text-sm text-red-500"
+        *ngIf="
+          !!registerForm.get('username')?.errors &&
+          !!registerForm.get('username')?.touched
+        "
+      >
+        <span>
+          {{ getErrors("username") }}
+        </span>
+      </span>
+    </div>
+    <div>
+      <ibm-label class="w-full mb-3">
+        Nome completo
+        <input
+          formControlName="fullname"
+          theme="light"
+          ibmText
+          size="sm"
+          placeholder="Nome completo"
+        />
+      </ibm-label>
+      <span
+        class="text-sm text-red-500"
+        *ngIf="
+          !!registerForm.get('fullname')?.errors &&
+          !!registerForm.get('fullname')?.touched
+        "
+      >
+        {{ getErrors("fullname") }}
+      </span>
+    </div>
+    <div>
+      <ibm-label class="w-full mb-3">
+        Senha
+        <input
+          formControlName="password"
+          theme="light"
+          ibmText
+          type="password"
+          size="sm"
+          placeholder="Senha"
+        />
+      </ibm-label>
+      <span
+        class="text-sm text-red-500"
+        *ngIf="
+          !!registerForm.get('password')?.errors &&
+          !!registerForm.get('password')?.touched
+        "
+      >
+        {{ getErrors("password") }}
+      </span>
+    </div>
+
+    <span class="text-sm">
+      Já possui uma conta?
+      <span class="text-blue-500 cursor-pointer" [routerLink]="['/login']"
+        >Faça login</span
+      >
+    </span>
+    <button size="sm" ibmButton="primary">Registrar</button>
+  </form>
+</div>
