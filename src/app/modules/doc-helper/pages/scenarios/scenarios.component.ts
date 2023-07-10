@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder } from '@angular/forms';
 import { NzModalService } from 'ng-zorro-antd/modal';
@@ -18,10 +18,10 @@ import { ScenariosService } from 'src/app/core/services/scenarios/scenarios.serv
   templateUrl: './scenarios.component.html',
   styleUrls: ['./scenarios.component.css'],
 })
-export class ScenariosComponent implements OnInit {
+export class ScenariosComponent {
+  scenariosService = inject(ScenariosService);
   formBuilder = inject(FormBuilder);
   modal = inject(NzModalService);
-  scenariosService = inject(ScenariosService);
 
   scenarioFilterForm = this.formBuilder.group({
     cardNumber: [''],
@@ -30,9 +30,17 @@ export class ScenariosComponent implements OnInit {
     cardReviwer: [''],
   });
 
-  private scenariosBruteData$ = new BehaviorSubject<any[] | null>(null);
+  private scenariosBaseData$ = new BehaviorSubject<any[] | null>(null);
+  private readonly sub_ = this.scenariosService
+    .getAllScenarios()
+    .pipe(
+      map((scenarios) => this.mapScenarioToRender(scenarios)),
+      tap((mappedScenarios) => this.scenariosBaseData$.next(mappedScenarios))
+    )
+    .subscribe();
+
   private filtredScenario$ = combineLatest([
-    this.scenariosBruteData$,
+    this.scenariosBaseData$,
     this.scenarioFilterForm.valueChanges.pipe(
       startWith(this.scenarioFilterForm.value),
       distinctUntilChanged()
@@ -43,16 +51,6 @@ export class ScenariosComponent implements OnInit {
   );
   scenarios = toSignal(this.filtredScenario$);
 
-  ngOnInit(): void {
-    this.scenariosService
-      .getAllScenarios()
-      .pipe(
-        map((scenarios) => this.mapScenarioToRender(scenarios)),
-        tap((mappedScenarios) => this.scenariosBruteData$.next(mappedScenarios))
-      )
-      .subscribe();
-  }
-
   deleteScenario(scenarioId: any) {
     this.modal.confirm({
       nzTitle: 'Are you sure delete this scenario?',
@@ -60,9 +58,9 @@ export class ScenariosComponent implements OnInit {
       nzOkText: 'Yes',
       nzOkDanger: true,
       nzOnOk: () => {
-        if (!this.scenariosBruteData$.value) return;
-        this.scenariosBruteData$.next(
-          this.scenariosBruteData$.value.filter(
+        if (!this.scenariosBaseData$.value) return;
+        this.scenariosBaseData$.next(
+          this.scenariosBaseData$.value.filter(
             (scenario: any) => scenario._id !== scenarioId
           )
         );

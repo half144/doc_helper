@@ -5,6 +5,7 @@ import { AuthenticationRoutingModule } from './authentication-routing.module';
 import { InputModule, ButtonModule } from 'carbon-components-angular';
 import { ReactiveFormsModule } from '@angular/forms';
 import { RegisterComponent } from './pages/register/register.component';
+import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
 
 @NgModule({
   declarations: [LoginComponent, RegisterComponent],
@@ -14,6 +15,8 @@ import { RegisterComponent } from './pages/register/register.component';
     InputModule,
     ButtonModule,
     ReactiveFormsModule,
+
+    NzCheckboxModule,
   ],
 })
 export class AuthenticationModule {}

@@ -12,6 +12,7 @@ export class AuthService {
   router = inject(Router);
   currentUser = signal(null);
 
+  isLoaded = signal(false);
   isAuthenticated = computed(() => {
     return !!this.currentUser();
   });
