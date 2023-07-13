@@ -3,6 +3,7 @@ import { Injectable, inject } from '@angular/core';
 import { catchError, tap, throwError } from 'rxjs';
 import { AuthService } from '../../authentication/auth.service';
 import { HttpCacheService } from '../../cache/http-cache.service';
+import { URL } from '../../constants';
 
 @Injectable({
   providedIn: 'root',
@@ -13,7 +14,7 @@ export class ProjectsService {
   authService = inject(AuthService);
 
   getProjectData(id) {
-    return this.http.get(`http://localhost:3000/projects/${id}`).pipe(
+    return this.http.get(`${URL}projects/${id}`).pipe(
       catchError((error) => {
         console.log(error);
         return throwError(() => error);
@@ -22,55 +23,47 @@ export class ProjectsService {
   }
 
   exitProject(id) {
-    return this.httpNative
-      .delete(`http://localhost:3000/projects/exit/${id}`)
-      .pipe(
-        catchError((error) => {
-          console.log(error);
-          return throwError(() => error);
-        }),
-        tap(() => {
-          this.authService.updateUser.next(true);
-        })
-      );
+    return this.httpNative.delete(`${URL}projects/exit/${id}`).pipe(
+      catchError((error) => {
+        console.log(error);
+        return throwError(() => error);
+      }),
+      tap(() => {
+        this.authService.updateUser.next(true);
+      })
+    );
   }
 
   createProject(projectInfo) {
-    return this.httpNative
-      .post('http://localhost:3000/projects', projectInfo)
-      .pipe(
-        catchError((error) => {
-          console.log(error);
-          return throwError(() => error);
-        }),
-        tap(() => {
-          this.authService.updateUser.next(true);
-        })
-      );
+    return this.httpNative.post('${URL}projects', projectInfo).pipe(
+      catchError((error) => {
+        console.log(error);
+        return throwError(() => error);
+      }),
+      tap(() => {
+        this.authService.updateUser.next(true);
+      })
+    );
   }
 
   createInviteLink(id) {
-    return this.httpNative
-      .post(`http://localhost:3000/projects/invite/${id}`, {})
-      .pipe(
-        catchError((error) => {
-          console.log(error);
-          return throwError(() => error);
-        })
-      );
+    return this.httpNative.post(`${URL}projects/invite/${id}`, {}).pipe(
+      catchError((error) => {
+        console.log(error);
+        return throwError(() => error);
+      })
+    );
   }
 
   acceptInvite(inviteToken) {
-    return this.http
-      .get(`http://localhost:3000/projects/invite/${inviteToken}`)
-      .pipe(
-        catchError((error) => {
-          console.log(error);
-          return throwError(() => error);
-        }),
-        tap(() => {
-          this.authService.updateUser.next(true);
-        })
-      );
+    return this.http.get(`${URL}projects/invite/${inviteToken}`).pipe(
+      catchError((error) => {
+        console.log(error);
+        return throwError(() => error);
+      }),
+      tap(() => {
+        this.authService.updateUser.next(true);
+      })
+    );
   }
 }
