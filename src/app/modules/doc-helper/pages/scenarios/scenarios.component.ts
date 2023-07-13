@@ -1,28 +1,30 @@
-import { Component, inject } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { Component, Input, OnInit, Signal, inject } from '@angular/core';
+import { toObservable } from '@angular/core/rxjs-interop';
 import { FormBuilder } from '@angular/forms';
 import { NzModalService } from 'ng-zorro-antd/modal';
 import {
-  BehaviorSubject,
+  Observable,
+  Subject,
   combineLatest,
   distinctUntilChanged,
-  filter,
   map,
+  of,
   startWith,
   tap,
 } from 'rxjs';
-import { ScenariosService } from 'src/app/core/services/scenarios/scenarios.service';
 
 @Component({
   selector: 'app-scenarios',
   templateUrl: './scenarios.component.html',
   styleUrls: ['./scenarios.component.css'],
 })
-export class ScenariosComponent {
-  scenariosService = inject(ScenariosService);
+export class ScenariosComponent implements OnInit {
+  @Input() scenarios$!: Observable<any>;
+
   formBuilder = inject(FormBuilder);
   modal = inject(NzModalService);
 
+  filtredScenarios$!: Observable<any>;
   scenarioFilterForm = this.formBuilder.group({
     cardNumber: [''],
     sprint: [''],
@@ -30,52 +32,20 @@ export class ScenariosComponent {
     cardReviwer: [''],
   });
 
-  private scenariosBaseData$ = new BehaviorSubject<any[] | null>(null);
-  private readonly sub_ = this.scenariosService
-    .getAllScenarios()
-    .pipe(
-      map((scenarios) => this.mapScenarioToRender(scenarios)),
-      tap((mappedScenarios) => this.scenariosBaseData$.next(mappedScenarios))
-    )
-    .subscribe();
-
-  private filtredScenario$ = combineLatest([
-    this.scenariosBaseData$,
-    this.scenarioFilterForm.valueChanges.pipe(
-      startWith(this.scenarioFilterForm.value),
-      distinctUntilChanged()
-    ),
-  ]).pipe(
-    filter(([scenarios]) => !!scenarios),
-    map(([scenarios, formValue]) => this.filterScenarios(scenarios!, formValue))
-  );
-  scenarios = toSignal(this.filtredScenario$);
-
-  deleteScenario(scenarioId: any) {
-    this.modal.confirm({
-      nzTitle: 'Are you sure delete this scenario?',
-      nzContent: '<b class="text-red-500">This action is irreversible</b>',
-      nzOkText: 'Yes',
-      nzOkDanger: true,
-      nzOnOk: () => {
-        if (!this.scenariosBaseData$.value) return;
-        this.scenariosBaseData$.next(
-          this.scenariosBaseData$.value.filter(
-            (scenario: any) => scenario._id !== scenarioId
-          )
-        );
-        this.scenariosService.deleteScenario(scenarioId).subscribe();
-      },
-      nzCancelText: 'No',
-      nzOnCancel: () => console.log('Cancel'),
-    });
-  }
-
-  private mapScenarioToRender(scenarios: any[]) {
-    return scenarios.map((scenario: any) => ({
-      ...scenario,
-      cardTitle: `Card ${scenario.cardNumber} - Sprint ${scenario.sprint}`,
-    }));
+  ngOnInit(): void {
+    this.filtredScenarios$ = combineLatest([
+      this.scenarios$,
+      this.scenarioFilterForm.valueChanges.pipe(
+        startWith(this.scenarioFilterForm.value),
+        distinctUntilChanged()
+      ),
+    ]).pipe(
+      tap(() => console.log('scenarios$')),
+      map(([scenarios, formValue]: [scenarios: any, formValue: any]) =>
+        this.filterScenarios(scenarios!, formValue)
+      ),
+      map((scenarios) => this.mapScenarios(scenarios))
+    );
   }
 
   private filterScenarios(scenarios: any[], formValue: any) {
@@ -111,5 +81,12 @@ export class ScenariosComponent {
         cardReviwer.includes(filterCardReviwer)
       );
     });
+  }
+
+  private mapScenarios(scenarios: any[]) {
+    return scenarios.map((scenario) => ({
+      ...scenario,
+      cardTitle: `Card ${scenario.cardNumber} - Sprint ${scenario.sprint}`,
+    }));
   }
 }

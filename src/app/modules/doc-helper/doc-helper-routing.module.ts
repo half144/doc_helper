@@ -1,8 +1,8 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { DocHelperComponent } from './pages/scenario/doc-helper.component';
-import { ScenariosComponent } from './pages/scenarios/scenarios.component';
 import { EditComponent } from './pages/edit/edit.component';
+import { ProjectsComponent } from '../projects/pages/projects/projects.component';
 
 const routes: Routes = [
   {
@@ -11,7 +11,7 @@ const routes: Routes = [
   },
   {
     path: '',
-    component: ScenariosComponent,
+    component: ProjectsComponent,
   },
   {
     path: 'edit/:id',

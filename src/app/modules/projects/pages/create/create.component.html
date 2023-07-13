@@ -1,0 +1,56 @@
+<div
+  class="container mx-auto flex items-center justify-center h-screen flex-col gap-14"
+>
+  <div class="text-center">
+    <h1 class="text-blue-500 text-3xl">Criar um novo projeto</h1>
+    <p class="text-sm">Crie seu projeto e organize seus testes e cenários.</p>
+  </div>
+
+  <div class="w-full">
+    <div class="flex h-[calc(100vh-200px)] w-full justify-center">
+      <form
+        [formGroup]="createProjectForm"
+        (ngSubmit)="onSubmit()"
+        class="max-w-[500px] w-full flex flex-col gap-5"
+      >
+        <div>
+          <ibm-label class="w-full">
+            Nome do projeto
+            <input
+              formControlName="projectName"
+              theme="light"
+              ibmText
+              size="sm"
+              placeholder="Nome do projeto"
+              autocomplete="off"
+            />
+          </ibm-label>
+          <span
+            class="text-sm text-red-500"
+            *ngIf="
+              !!createProjectForm.get('projectName')?.errors &&
+              !!createProjectForm.get('projectName')?.touched
+            "
+          >
+            <span> O nome do projeto é obrigatório </span>
+          </span>
+        </div>
+        <div>
+          <ibm-label class="w-full">
+            Descrição do projeto
+            <input
+              formControlName="projectDescription"
+              theme="light"
+              ibmText
+              size="sm"
+              placeholder="Descrição do projeto"
+              autocomplete="off"
+            />
+          </ibm-label>
+        </div>
+
+        <button size="sm" ibmButton="primary">Criar projeto</button>
+      </form>
+    </div>
+  </div>
+</div>

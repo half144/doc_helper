@@ -16,9 +16,14 @@
       >Suporte</ibm-header-item
     >
     <ibm-header-menu ibmTheme="g100" title="Meus projetos">
-      <ibm-header-item [route]="['foo']">Link 1</ibm-header-item>
-      <ibm-header-item [route]="['bar']">Link 2</ibm-header-item>
-      <ibm-header-item [route]="['foo']">Link 3</ibm-header-item>
+      <ibm-header-item [route]="['projects', 'create']">
+        Criar novo projeto
+      </ibm-header-item>
+      <ng-container *ngFor="let project of projects()">
+        <ibm-header-item [route]="['projects', project._id]">
+          {{ project.projectName }}
+        </ibm-header-item>
+      </ng-container>
     </ibm-header-menu>
   </ibm-header-navigation>
   <ibm-header-global>

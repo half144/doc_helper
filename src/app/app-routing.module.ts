@@ -20,6 +20,14 @@ const routes: Routes = [
         (m) => m.AuthenticationModule
       ),
   },
+  {
+    path: 'projects',
+    canActivateChild: [JWTGuard],
+    loadChildren: () =>
+      import('./modules/projects/projects.module').then(
+        (m) => m.ProjectsModule
+      ),
+  },
 ];
 
 @NgModule({

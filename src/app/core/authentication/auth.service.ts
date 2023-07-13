@@ -1,6 +1,15 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject, signal, effect, computed } from '@angular/core';
-import { catchError, of, take, tap, throwError } from 'rxjs';
+import {
+  BehaviorSubject,
+  Subject,
+  catchError,
+  of,
+  switchMap,
+  take,
+  tap,
+  throwError,
+} from 'rxjs';
 import { URL } from '../constants';
 import { Router } from '@angular/router';
 
@@ -10,19 +19,28 @@ import { Router } from '@angular/router';
 export class AuthService {
   http = inject(HttpClient);
   router = inject(Router);
-  currentUser = signal(null);
-
+  currentUser = signal<any>(null);
   isLoaded = signal(false);
   isAuthenticated = computed(() => {
     return !!this.currentUser();
   });
 
+  updateUser = new Subject<any>();
+  private readonly updateUserSub = this.updateUser
+    .pipe(
+      switchMap((user) => {
+        if (!user) return of(null);
+        return this.getMe();
+      })
+    )
+    .subscribe();
+
   getMe() {
-    const headers = this.getHeaderWithToken();
-    return this.http.get<any>(`${URL}auth/me`, { headers }).pipe(
+    return this.http.get<any>(`${URL}auth/me`).pipe(
       take(1),
       tap((user) => {
         if (!user) return;
+        console.log('user', user);
         this.currentUser.set(user);
       }),
       catchError((err) => {
@@ -40,6 +58,7 @@ export class AuthService {
       tap((res: any) => {
         if (stayConnected) localStorage.setItem('token', res.access_token);
         this.currentUser.set(res);
+        console.log('res', res);
         this.router.navigate(['/']);
       })
     );
@@ -58,12 +77,6 @@ export class AuthService {
           this.router.navigate(['/']);
         })
       );
-  }
-
-  getHeaderWithToken() {
-    const token = localStorage.getItem('token');
-    const headers = { Authorization: `Bearer ${token}` };
-    return headers;
   }
 
   logout() {

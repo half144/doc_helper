@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, computed, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { NavigationEnd, Router } from '@angular/router';
 import { filter, map } from 'rxjs';
@@ -13,6 +13,10 @@ export class HeaderComponent {
   router = inject(Router);
   authService = inject(AuthService);
   isSideBarOpen = signal(false);
+
+  projects = computed(() => {
+    return this.authService.currentUser().projects;
+  });
 
   currentPath$ = this.router.events.pipe(
     filter((event) => event instanceof NavigationEnd),

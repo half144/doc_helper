@@ -8,7 +8,7 @@ import { pt_BR } from 'ng-zorro-antd/i18n';
 import { registerLocaleData } from '@angular/common';
 import pt from '@angular/common/locales/pt';
 import { FormsModule } from '@angular/forms';
-import { HttpClientModule } from '@angular/common/http';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DocHelperModule } from './modules/doc-helper/doc-helper.module';
 import { HeaderComponent } from './shared/components/header/header.component';
@@ -21,8 +21,10 @@ import {
   DialogModule,
   ThemeModule,
   IconModule,
+  TilesModule,
 } from 'carbon-components-angular';
 import { NzIconModule } from 'ng-zorro-antd/icon';
+import { JwtInterceptor } from './core/interceptors/jwt.interceptor';
 
 registerLocaleData(pt);
 
@@ -44,8 +46,16 @@ registerLocaleData(pt);
     ThemeModule,
     NzIconModule,
     IconModule,
+    TilesModule,
   ],
-  providers: [{ provide: NZ_I18N, useValue: pt_BR }],
+  providers: [
+    { provide: NZ_I18N, useValue: pt_BR },
+    {
+      provide: HTTP_INTERCEPTORS,
+      useClass: JwtInterceptor,
+      multi: true,
+    },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

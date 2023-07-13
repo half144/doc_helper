@@ -24,6 +24,7 @@ import {
   TilesModule,
 } from 'carbon-components-angular';
 import { InputModule, SelectModule } from 'carbon-components-angular';
+import { TileComponent } from 'src/app/shared/components/tile/tile.component';
 
 @NgModule({
   declarations: [
@@ -52,8 +53,9 @@ import { InputModule, SelectModule } from 'carbon-components-angular';
     InputModule,
     SelectModule,
     TilesModule,
+    TileComponent,
     IconModule,
   ],
-  exports: [DocHelperComponent],
+  exports: [DocHelperComponent, ScenariosComponent],
 })
 export class DocHelperModule {}

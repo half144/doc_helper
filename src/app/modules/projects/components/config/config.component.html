@@ -1,0 +1,35 @@
+<div class="flex flex-col gap-6">
+  <div class="flex flex-col gap-2">
+    <h2 class="text-blue-500">Link de convite</h2>
+    <ng-container *ngIf="inviteLink()">
+      <p class="text-sm">
+        Compartilhe o link abaixo com as pessoas que você deseja convidar para o
+        projeto.
+      </p>
+      <p
+        (click)="copyInviteLink()"
+        class="text-sm text-blue-500 w-1/2 cursor-pointer hover:text-blue-800 transition-all truncate"
+      >
+        {{ inviteLink() }}
+      </p>
+    </ng-container>
+
+    <button
+      *ngIf="!inviteLink()"
+      (click)="createInviteLink()"
+      ibmButton="secondary"
+    >
+      Criar link de convite
+    </button>
+  </div>
+  <div class="flex flex-col gap-2">
+    <h2 class="text-blue-500">Sair do projeto</h2>
+    <p class="text-sm">
+      Você pode sair do projeto a qualquer momento. Ao sair, você não terá mais
+      acesso ao projeto e não poderá mais visualizar ou editar as informações do
+      projeto.
+    </p>
+
+    <button (click)="exitProject()" ibmButton="danger">Sair do projeto</button>
+  </div>
+</div>

@@ -1,0 +1,26 @@
+<div
+  class="container flex items-center justify-center flex-col mx-auto gap-2 h-[calc(100vh-150px)]"
+>
+  <span
+    class="text-blue-500 text-6xl"
+    nz-icon
+    nzType="team"
+    nzTheme="outline"
+  ></span>
+  <h1 class="text-blue-500 text-center max-w-[250px] text-2xl">
+    Você recebeu um convite para participar desse projeto!
+  </h1>
+  <p>
+    Deseja entrar para o projeto
+    <span class="font-semibold text-blue-500">{{ project().projectnName }}</span
+    >?
+  </p>
+  <p class="text-sm">
+    Você pode sair do projeto a qualquer momento, basta clicar no botão
+    <span class="font-semibold text-blue-500">Sair do projeto</span> na página
+    do projeto.
+  </p>
+  <button (click)="acceptInvite()" class="mt-4" ibmButton="primary">
+    Aceitar convite
+  </button>
+</div>
