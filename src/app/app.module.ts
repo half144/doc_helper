@@ -25,12 +25,14 @@ import {
 } from 'carbon-components-angular';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { JwtInterceptor } from './core/interceptors/jwt.interceptor';
+import { RouterModule } from '@angular/router';
 
 registerLocaleData(pt);
 
 @NgModule({
   declarations: [AppComponent, HeaderComponent],
   imports: [
+    RouterModule,
     BrowserModule,
     AppRoutingModule,
     FormsModule,

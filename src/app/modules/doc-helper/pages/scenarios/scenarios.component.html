@@ -52,7 +52,14 @@
   <div class="flex flex-col gap-5">
     <div class="flex justify-between items-center">
       <h1 class="text-blue-600 font-medium text-3xl">Cenários de teste:</h1>
-      <button size="sm" [routerLink]="['create']" ibmButton="primary">
+      <button
+        size="sm"
+        [routerLink]="['/create']"
+        [queryParams]="{
+          projectId: currentProjectId
+        }"
+        ibmButton="primary"
+      >
         Criar cenário
       </button>
     </div>
@@ -61,17 +68,24 @@
         *ngIf="filtredScenarios$ | async as scenarios"
         class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-4 2xl:grid-cols-5 gap-4 py-2"
       >
-        <app-tile *ngFor="let item of scenarios">
-          <h1 class="text-xl mb-3">{{ item.cardTitle }}</h1>
-          <p>
-            Desenvolvedor:
-            <span class="font-bold">{{ item.cardHolder }}</span>
-          </p>
-          <p>
-            Revisor:
-            <span class="font-bold">{{ item.cardReviwer }}</span>
-          </p>
-        </app-tile>
+        <ng-container *ngFor="let item of scenarios">
+          <app-tile
+            [route]="['/edit', item._id]"
+            [queryParams]="{
+              projectId: currentProjectId
+            }"
+          >
+            <h1 class="text-xl mb-3">{{ item.cardTitle }}</h1>
+            <p>
+              Desenvolvedor:
+              <span class="font-bold">{{ item.cardHolder }}</span>
+            </p>
+            <p>
+              Revisor:
+              <span class="font-bold">{{ item.cardReviwer }}</span>
+            </p>
+          </app-tile>
+        </ng-container>
       </div>
     </div>
   </div>

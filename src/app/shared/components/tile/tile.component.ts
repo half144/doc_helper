@@ -11,4 +11,5 @@ import { TilesModule } from 'carbon-components-angular';
 })
 export class TileComponent {
   @Input() route;
+  @Input() queryParams = {};
 }

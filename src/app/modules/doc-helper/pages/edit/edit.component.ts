@@ -1,4 +1,4 @@
-import { Component, inject } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { switchMap } from 'rxjs';
 import { ScenariosService } from 'src/app/core/services/scenarios/scenarios.service';
@@ -9,7 +9,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
   templateUrl: './edit.component.html',
   styleUrls: ['./edit.component.css'],
 })
-export class EditComponent {
+export class EditComponent implements OnInit {
   activatedRoute = inject(ActivatedRoute);
   scenariosService = inject(ScenariosService);
 
@@ -18,4 +18,8 @@ export class EditComponent {
   );
 
   scenario = toSignal(this.scenario$);
+
+  ngOnInit(): void {
+    console.log('scenario', this.activatedRoute.snapshot.queryParams);
+  }
 }

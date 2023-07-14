@@ -22,10 +22,10 @@ export class ScenariosService {
     return this.httpCache.get(`${URL}scenarios`);
   }
 
-  saveScenario(scenario: any) {
-    return this.http.post(`${URL}scenarios`, scenario).pipe(
+  saveScenario(scenario: any, projectId: string) {
+    return this.http.post(`${URL}projects/${projectId}/cards`, scenario).pipe(
       tap(() => {
-        this.httpCache.invalidateCache(`${URL}scenarios`);
+        this.httpCache.invalidateCache(`${URL}projects/${projectId}`);
         this.httpCache.invalidateCache(`${URL}scenarios/${scenario.id}`);
       })
     );

@@ -40,7 +40,7 @@ export class AuthService {
       take(1),
       tap((user) => {
         if (!user) return;
-        console.log('user', user);
+
         this.currentUser.set(user);
       }),
       catchError((err) => {
@@ -58,7 +58,7 @@ export class AuthService {
       tap((res: any) => {
         if (stayConnected) localStorage.setItem('token', res.access_token);
         this.currentUser.set(res);
-        console.log('res', res);
+
         this.router.navigate(['/']);
       })
     );

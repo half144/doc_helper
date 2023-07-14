@@ -35,7 +35,7 @@ export class ProjectsService {
   }
 
   createProject(projectInfo) {
-    return this.httpNative.post('${URL}projects', projectInfo).pipe(
+    return this.httpNative.post(`${URL}projects`, projectInfo).pipe(
       catchError((error) => {
         console.log(error);
         return throwError(() => error);

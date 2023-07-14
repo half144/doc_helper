@@ -1,9 +1,10 @@
 import { Component, Input, OnInit, inject } from '@angular/core';
 import { FormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import jsPDF from 'jspdf';
-import { catchError, take, tap } from 'rxjs';
+import { catchError, switchMap, take, tap } from 'rxjs';
 import { ScenariosService } from 'src/app/core/services/scenarios/scenarios.service';
 import * as html2pdf from 'html2pdf.js';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-doc-helper',
@@ -15,6 +16,7 @@ export class DocHelperComponent implements OnInit {
 
   formBuilder = inject(FormBuilder);
   scenarioService = inject(ScenariosService);
+  route = inject(ActivatedRoute);
 
   cardInfoForm = this.formBuilder.group({
     cardNumber: [null, [Validators.required]],
@@ -154,16 +156,15 @@ export class DocHelperComponent implements OnInit {
       scenarios: Object.values(this.scenariosForm.value),
     };
 
-    console.log(scenario);
-
-    this.scenarioService
-      .saveScenario(scenario)
+    this.route.queryParams
       .pipe(
         take(1),
-        tap((res) => console.log(res)),
-        catchError((err) => {
-          console.log(err);
-          return err;
+        switchMap((params) =>
+          this.scenarioService.saveScenario(scenario, params['projectId'])
+        ),
+        catchError((error) => {
+          console.log(error);
+          return [];
         })
       )
       .subscribe();

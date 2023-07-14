@@ -1,7 +1,6 @@
-import { Component, computed, inject, signal } from '@angular/core';
-import { toObservable, toSignal } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Observable, catchError, map, switchMap, tap } from 'rxjs';
+import { Component, inject } from '@angular/core';
+import { ActivatedRoute } from '@angular/router';
+import { map, switchMap } from 'rxjs';
 import { ProjectsService } from 'src/app/core/services/projects/projects.service';
 
 @Component({
@@ -11,14 +10,10 @@ import { ProjectsService } from 'src/app/core/services/projects/projects.service
 })
 export class ProjectComponent {
   projectsService = inject(ProjectsService);
-  activatedRoute = inject(ActivatedRoute);
-  router = inject(Router);
+  route = inject(ActivatedRoute);
 
-  inviteLink = signal<string | null>(null);
-
-  project$: Observable<any> = this.activatedRoute.params.pipe(
-    switchMap(({ id }) => this.projectsService.getProjectData(id))
+  project$ = this.route.params.pipe(
+    switchMap((params) => this.projectsService.getProjectData(params['id']))
   );
-
   cards$ = this.project$.pipe(map((project) => project?.cards));
 }
