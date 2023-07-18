@@ -43,7 +43,7 @@ export class HttpCacheService {
       [url]: null,
     });
 
-    this.refresh$.next(null);
+    this.refresh$.next(true);
 
     console.log('invalidateCache', this.store());
   }
