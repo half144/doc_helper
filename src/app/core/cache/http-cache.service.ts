@@ -9,7 +9,7 @@ export class HttpCacheService {
   private store = signal({} as any);
   private http = inject(HttpClient);
 
-  refresh$ = new BehaviorSubject(null);
+  private refresh$ = new BehaviorSubject(null);
 
   public get(url: string, params: any = {}) {
     const cachedStore: any = this.store();
