@@ -1,5 +1,12 @@
-import { Component, Input, OnInit, Signal, inject } from '@angular/core';
-import { toObservable } from '@angular/core/rxjs-interop';
+import {
+  Component,
+  Input,
+  OnInit,
+  Signal,
+  computed,
+  inject,
+} from '@angular/core';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { NzModalService } from 'ng-zorro-antd/modal';
@@ -20,7 +27,7 @@ import {
   styleUrls: ['./scenarios.component.css'],
 })
 export class ScenariosComponent implements OnInit {
-  @Input() scenarios$!: Observable<any>;
+  @Input('scenarios') scenarios$!: Observable<any>;
 
   route = inject(ActivatedRoute);
   currentProjectId = this.route.snapshot.paramMap.get('id');

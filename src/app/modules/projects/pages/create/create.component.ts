@@ -20,9 +20,9 @@ export class CreateComponent {
   });
 
   onSubmit() {
-    if (this.createProjectForm.invalid) {
-      return this.createProjectForm.markAllAsTouched();
-    }
+    if (this.createProjectForm.invalid)
+      this.createProjectForm.markAllAsTouched();
+
     this.projectsService
       .createProject(this.createProjectForm.value)
       .pipe(

@@ -2,16 +2,27 @@
   *ngIf="project$ | async as project"
   class="container mx-auto flex flex-col gap-12"
 >
-  <div>
-    <h1 class="text-blue-500 text-4xl">{{ project.projectName }}</h1>
-    <p>{{ project.projectDescription }}</p>
-    <p class="text-sm">
-      {{ project.cards.length }}
-      <span *ngIf="project.cards.length < 2">cenário</span>
-      <span *ngIf="project.cards.length >= 2">cenários</span>
-      no projeto
-    </p>
+  <div class="flex items-center justify-between">
+    <div>
+      <h1 class="text-blue-500 text-4xl">{{ project.projectName }}</h1>
+      <p>{{ project.projectDescription }}</p>
+      <p class="text-sm">
+        {{ project.cards.length }}
+        <span *ngIf="project.cards.length < 2">cenário</span>
+        <span *ngIf="project.cards.length >= 2">cenários</span>
+        no projeto
+      </p>
+    </div>
+    <div>
+      <span
+        class="text-3xl cursor-pointer"
+        nz-icon
+        [routerLink]="['/projects', project._id, 'config']"
+        [nzType]="'setting'"
+        [nzTheme]="'fill'"
+      ></span>
+    </div>
   </div>
 
-  <app-scenarios [scenarios$]="cards$"></app-scenarios>
+  <app-scenarios [scenarios]="cards$"></app-scenarios>
 </div>

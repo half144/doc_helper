@@ -1,10 +1,10 @@
 import { Component, Input, OnInit, inject } from '@angular/core';
 import { FormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import jsPDF from 'jspdf';
-import { catchError, switchMap, take, tap } from 'rxjs';
+import { catchError, take, tap } from 'rxjs';
 import { ScenariosService } from 'src/app/core/services/scenarios/scenarios.service';
-import * as html2pdf from 'html2pdf.js';
 import { ActivatedRoute } from '@angular/router';
+import { PdfService } from 'src/app/core/services/pdf/pdf.service';
 
 @Component({
   selector: 'app-doc-helper',
@@ -14,9 +14,10 @@ import { ActivatedRoute } from '@angular/router';
 export class DocHelperComponent implements OnInit {
   @Input() cardInfo?: any;
 
-  formBuilder = inject(FormBuilder);
-  scenarioService = inject(ScenariosService);
-  route = inject(ActivatedRoute);
+  private formBuilder = inject(FormBuilder);
+  private scenarioService = inject(ScenariosService);
+  private pdfService = inject(PdfService);
+  private route = inject(ActivatedRoute);
 
   cardInfoForm = this.formBuilder.group({
     cardNumber: [null, [Validators.required]],
@@ -26,7 +27,6 @@ export class DocHelperComponent implements OnInit {
   });
 
   scenariosForm: UntypedFormGroup = this.formBuilder.group({});
-
   listOfControl: Array<{
     id: number;
     controlInstance: string;
@@ -105,66 +105,32 @@ export class DocHelperComponent implements OnInit {
     const doc = new jsPDF('p', 'pt', 'a4', true);
     const html = document.getElementById('pdfContent');
 
-    this.savePdfFromHtml({ html, doc });
+    this.pdfService.savePdfFromHtml({ html, doc, title: 'Cenários' });
   }
 
-  savePdfFromHtml({ html, doc }: any): void {
-    if (!html) {
-      return;
-    }
+  saveScenarios(): void {
+    const scenarios = this.scenariosForm.value;
+    const cardInfo = this.cardInfoForm.value;
 
-    const srcWidth = html.scrollWidth;
-    const pWidth = doc.internal.pageSize.getWidth();
-    const scale = (pWidth - 1 * 2) / Math.ceil(srcWidth);
-
-    // const options = {
-    //   filename: `Cenários CARD-${this.cardInfoForm.value.cardNumber}|SPRINT=${
-    //     this.cardInfoForm.value.sprint
-    //   }-${new Date().toISOString()}.pdf`,
-    //   html2canvas: {
-    //     scale: 2,
-    //   },
-    //   jsPDF: {
-    //     unit: 'mm',
-    //     format: 'a4',
-    //     orientation: 'portrait',
-    //   },
-    // };
-
-    // html2pdf().set(options).from(html).save();
-
-    doc.html(html!, {
-      autoPaging: 'text',
-      image: { type: 'jpeg', quality: 0.92 },
-      html2canvas: {
-        scale,
-        width: srcWidth,
-      },
-      callback: (doc: jsPDF) => {
-        doc.save(
-          `Cenários CARD-${this.cardInfoForm.value.cardNumber}|SPRINT=${
-            this.cardInfoForm.value.sprint
-          }-${new Date().toISOString()}.pdf`
-        );
-      },
-    });
-  }
-
-  saveScenario(): void {
-    const scenario = {
-      ...this.cardInfoForm.value,
-      scenarios: Object.values(this.scenariosForm.value),
+    const card = {
+      ...cardInfo,
+      scenarios: Object.values(scenarios),
     };
 
-    this.route.queryParams
+    const projectId = this.route.snapshot.queryParamMap.get('projectId');
+
+    console.log(projectId);
+
+    this.scenarioService
+      .saveScenario(card, projectId!)
       .pipe(
         take(1),
-        switchMap((params) =>
-          this.scenarioService.saveScenario(scenario, params['projectId'])
-        ),
+        tap((response) => {
+          console.log(response);
+        }),
         catchError((error) => {
           console.log(error);
-          return [];
+          return error;
         })
       )
       .subscribe();

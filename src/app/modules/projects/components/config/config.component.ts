@@ -1,4 +1,4 @@
-import { Component, computed, inject, signal } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
 import { catchError, switchMap, tap } from 'rxjs';
@@ -11,36 +11,22 @@ import { ProjectsService } from 'src/app/core/services/projects/projects.service
 })
 export class ConfigComponent {
   projectsService = inject(ProjectsService);
-  activatedRoute = inject(ActivatedRoute);
   router = inject(Router);
+  route = inject(ActivatedRoute);
 
   inviteLink = signal<string | null>(null);
 
-  project$ = this.activatedRoute.params.pipe(
-    switchMap(({ id }) => this.projectsService.getProjectData(id)),
-    catchError((error) => {
-      console.log(error);
-      return error;
-    })
+  project$ = this.route.params.pipe(
+    switchMap((params) => this.projectsService.getProjectData(params['id']))
   );
 
   project = toSignal<any>(this.project$);
-  projectName = computed(() => this.project()?.projectName);
-  projectDescription = computed(() => this.project()?.projectDescription);
-  membersCount = computed(() => this.project()?.projectMembers.length);
 
-  createInviteLink() {
+  public createInviteLink() {
     return this.projectsService
       .createInviteLink(this.project()?._id)
       .pipe(
-        tap((link: any) => {
-          const baseUrl = window.location.origin;
-          const queryToken = `?inviteToken=${link.inviteToken}`;
-          const inviteLink = `${baseUrl}/projects/invite/${
-            this.project()._id
-          }${queryToken}`;
-          this.inviteLink.set(inviteLink);
-        }),
+        tap((link) => this.setInviteLink(link)),
         catchError((error) => {
           console.log(error);
           return error;
@@ -49,25 +35,31 @@ export class ConfigComponent {
       .subscribe();
   }
 
-  copyInviteLink() {
+  public copyInviteLink() {
     const link = this.inviteLink();
-    if (link) {
-      navigator.clipboard.writeText(link);
-    }
+    if (link) navigator.clipboard.writeText(link);
   }
 
-  exitProject() {
+  public exitProject() {
     return this.projectsService
       .exitProject(this.project()?._id)
       .pipe(
-        tap(() => {
-          this.router.navigate(['/']);
-        }),
+        tap(() => this.router.navigate(['/'])),
         catchError((error) => {
           console.log(error);
           return error;
         })
       )
       .subscribe();
+  }
+
+  private setInviteLink(link: any) {
+    const baseUrl = window.location.origin;
+    const queryToken = `?inviteToken=${link.inviteToken}`;
+
+    const inviteLink = `${baseUrl}/projects/invite/${
+      this.project()._id
+    }${queryToken}`;
+    this.inviteLink.set(inviteLink);
   }
 }

@@ -24,9 +24,8 @@ export class InviteComponent {
   project = toSignal<any>(this.project$);
 
   acceptInvite() {
-    const inviteToken = this.activatedRoute.snapshot.queryParams['inviteToken'];
     this.projectsService
-      .acceptInvite(inviteToken)
+      .acceptInvite(this.activatedRoute.snapshot.queryParams['inviteToken'])
       .pipe(
         tap(() => {
           console.log(this.project()?._id);

@@ -22,6 +22,7 @@ import {
   ThemeModule,
   IconModule,
   TilesModule,
+  InputModule,
 } from 'carbon-components-angular';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { JwtInterceptor } from './core/interceptors/jwt.interceptor';
@@ -49,6 +50,7 @@ registerLocaleData(pt);
     NzIconModule,
     IconModule,
     TilesModule,
+    InputModule,
   ],
   providers: [
     { provide: NZ_I18N, useValue: pt_BR },
