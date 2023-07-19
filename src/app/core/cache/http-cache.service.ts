@@ -1,18 +1,18 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject, signal } from '@angular/core';
-import { BehaviorSubject, catchError, map, of, switchMap } from 'rxjs';
+import { BehaviorSubject, catchError, filter, map, of, switchMap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class HttpCacheService {
-  private store = signal({} as any);
+  private store = new BehaviorSubject<any>({});
   private http = inject(HttpClient);
 
-  private refresh$ = new BehaviorSubject(null);
+  private refresh$ = new BehaviorSubject<string | null>(null);
 
   public get(url: string, params: any = {}) {
-    const cachedStore: any = this.store();
+    const cachedStore: any = this.store.getValue();
     const cache = cachedStore[url];
 
     if (cache) {
@@ -20,10 +20,11 @@ export class HttpCacheService {
     }
 
     return this.refresh$.pipe(
+      filter((refreshUrl) => refreshUrl === url),
       switchMap(() =>
         this.http.get(url, params).pipe(
           map((res: any) => {
-            this.store.set({
+            this.store.next({
               ...cachedStore,
               [url]: res,
             });
@@ -38,13 +39,11 @@ export class HttpCacheService {
   }
 
   public invalidateCache(url: string) {
-    this.store.set({
-      ...this.store(),
+    this.store.next({
+      ...this.store.getValue(),
       [url]: null,
     });
 
-    this.refresh$.next(null);
-
-    console.log('invalidateCache', this.store());
+    this.refresh$.next(url);
   }
 }
