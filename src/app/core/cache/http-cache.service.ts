@@ -16,28 +16,6 @@ import {
   switchMap,
 } from 'rxjs';
 
-interface HttpOptions {
-  headers?:
-    | HttpHeaders
-    | {
-        [header: string]: string | string[];
-      };
-  context?: HttpContext;
-  observe?: any;
-  params?:
-    | HttpParams
-    | {
-        [param: string]:
-          | string
-          | number
-          | boolean
-          | ReadonlyArray<string | number | boolean>;
-      };
-  reportProgress?: boolean;
-  responseType: any;
-  withCredentials?: boolean;
-}
-
 @Injectable({
   providedIn: 'root',
 })
@@ -84,4 +62,26 @@ export class HttpCacheService {
 
     this.refresh$.next(url);
   }
+}
+
+interface HttpOptions {
+  headers?:
+    | HttpHeaders
+    | {
+        [header: string]: string | string[];
+      };
+  context?: HttpContext;
+  observe?: any;
+  params?:
+    | HttpParams
+    | {
+        [param: string]:
+          | string
+          | number
+          | boolean
+          | ReadonlyArray<string | number | boolean>;
+      };
+  reportProgress?: boolean;
+  responseType: any;
+  withCredentials?: boolean;
 }
