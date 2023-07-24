@@ -9,7 +9,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
   templateUrl: './edit.component.html',
   styleUrls: ['./edit.component.css'],
 })
-export class EditComponent implements OnInit {
+export class EditComponent {
   activatedRoute = inject(ActivatedRoute);
   scenariosService = inject(ScenariosService);
 
@@ -18,8 +18,4 @@ export class EditComponent implements OnInit {
   );
 
   scenario = toSignal(this.scenario$);
-
-  ngOnInit(): void {
-    console.log('scenario', this.activatedRoute.snapshot.queryParams);
-  }
 }
