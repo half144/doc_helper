@@ -15,11 +15,11 @@ export class ScenariosService {
 
   getScenarioById(id: string): Observable<any> {
     console.log('getScenarioById', id);
-    return this.httpCache.get(`${URL}scenarios/${id}`);
+    return this.httpCache.get<any>(`${URL}scenarios/${id}`);
   }
 
   getAllScenarios() {
-    return this.httpCache.get(`${URL}scenarios`);
+    return this.httpCache.get<any>(`${URL}scenarios`);
   }
 
   saveScenario(scenario: any, projectId: string) {

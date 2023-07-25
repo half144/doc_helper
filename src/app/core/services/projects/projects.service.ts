@@ -14,7 +14,7 @@ export class ProjectsService {
   authService = inject(AuthService);
 
   getProjectData(id) {
-    return this.http.get(`${URL}projects/${id}`).pipe(
+    return this.http.get<any>(`${URL}projects/${id}`).pipe(
       catchError((error) => {
         console.log(error);
         return throwError(() => error);
@@ -56,7 +56,7 @@ export class ProjectsService {
   }
 
   acceptInvite(inviteToken) {
-    return this.http.get(`${URL}projects/invite/${inviteToken}`).pipe(
+    return this.http.get<any>(`${URL}projects/invite/${inviteToken}`).pipe(
       catchError((error) => {
         console.log(error);
         return throwError(() => error);

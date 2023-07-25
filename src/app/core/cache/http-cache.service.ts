@@ -13,6 +13,7 @@ import {
   filter,
   map,
   of,
+  startWith,
   switchMap,
 } from 'rxjs';
 
@@ -20,9 +21,7 @@ import {
   providedIn: 'root',
 })
 export class HttpCacheService {
-  private store = new BehaviorSubject<Record<string, HttpEvent<any> | null>>(
-    {}
-  );
+  private store = new BehaviorSubject<any>({});
   private http = inject(HttpClient);
 
   private refresh$ = new BehaviorSubject<string | null>(null);
@@ -36,6 +35,7 @@ export class HttpCacheService {
     }
 
     return this.refresh$.pipe(
+      startWith(url),
       filter((refreshUrl) => refreshUrl === url),
       switchMap(() =>
         this.http.get<T>(url, options).pipe(
