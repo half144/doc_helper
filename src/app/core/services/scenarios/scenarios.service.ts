@@ -14,7 +14,6 @@ export class ScenariosService {
   authService = inject(AuthService);
 
   getScenarioById(id: string): Observable<any> {
-    console.log('getScenarioById', id);
     return this.httpCache.get<any>(`${URL}scenarios/${id}`);
   }
 
@@ -26,7 +25,7 @@ export class ScenariosService {
     return this.http.post(`${URL}projects/${projectId}/cards`, scenario).pipe(
       tap(() => {
         this.httpCache.invalidateCache(`${URL}projects/${projectId}`);
-        this.httpCache.invalidateCache(`${URL}scenarios/${scenario.id}`);
+        this.httpCache.invalidateCache(`${URL}scenarios/${scenario._id}`);
       })
     );
   }

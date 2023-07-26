@@ -1,5 +1,6 @@
 import { Injectable } from '@angular/core';
 import jsPDF from 'jspdf';
+import { downloadScenariosDocx } from '../../lib/createDocx';
 
 @Injectable({
   providedIn: 'root',
@@ -48,5 +49,9 @@ export class PdfService {
         doc.save(`${title}.pdf`);
       },
     });
+  }
+
+  generateScenariosDocx(scenario) {
+    downloadScenariosDocx(scenario);
   }
 }

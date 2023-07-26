@@ -5,6 +5,7 @@ import { catchError, take, tap } from 'rxjs';
 import { ScenariosService } from 'src/app/core/services/scenarios/scenarios.service';
 import { ActivatedRoute } from '@angular/router';
 import { PdfService } from 'src/app/core/services/pdf/pdf.service';
+import { ToastrService } from 'ngx-toastr';
 
 @Component({
   selector: 'app-doc-helper',
@@ -18,15 +19,18 @@ export class DocHelperComponent implements OnInit {
   private scenarioService = inject(ScenariosService);
   private pdfService = inject(PdfService);
   private route = inject(ActivatedRoute);
+  private toastr = inject(ToastrService);
 
   cardInfoForm = this.formBuilder.group({
     cardNumber: [null, [Validators.required]],
     cardReviwer: [null, [Validators.required]],
     cardHolder: [null, [Validators.required]],
+    cardDescription: [null, [Validators.required]],
     sprint: [null, [Validators.required]],
   });
 
   scenariosForm: UntypedFormGroup = this.formBuilder.group({});
+
   listOfControl: Array<{
     id: number;
     controlInstance: string;
@@ -45,6 +49,7 @@ export class DocHelperComponent implements OnInit {
         cardReviwer: this.cardInfo.cardReviwer,
         cardHolder: this.cardInfo.cardHolder,
         sprint: this.cardInfo.sprint,
+        cardDescription: this.cardInfo.cardDescription,
       });
 
       this.cardInfo.scenarios.forEach((scenario: any) => {
@@ -102,13 +107,31 @@ export class DocHelperComponent implements OnInit {
   }
 
   generatePdf(): void {
-    const doc = new jsPDF('p', 'pt', 'a4', true);
-    const html = document.getElementById('pdfContent');
-
-    this.pdfService.savePdfFromHtml({ html, doc, title: 'Cenários' });
+    const cardInfo = this.getCardInfo();
+    this.pdfService.generateScenariosDocx(cardInfo);
   }
 
   saveScenarios(): void {
+    const card = this.getCardInfo();
+    const projectId = this.route.snapshot.queryParamMap.get('projectId');
+
+    this.scenarioService
+      .saveScenario(card, projectId!)
+      .pipe(
+        take(1),
+        tap(() => {
+          this.toastr.success('Cenários salvos com sucesso!');
+        }),
+        catchError((error) => {
+          console.log(error);
+          this.toastr.error('Erro ao salvar cenários!');
+          return error;
+        })
+      )
+      .subscribe();
+  }
+
+  getCardInfo() {
     const scenarios = this.scenariosForm.value;
     const cardInfo = this.cardInfoForm.value;
 
@@ -116,23 +139,6 @@ export class DocHelperComponent implements OnInit {
       ...cardInfo,
       scenarios: Object.values(scenarios),
     };
-
-    const projectId = this.route.snapshot.queryParamMap.get('projectId');
-
-    console.log(projectId);
-
-    this.scenarioService
-      .saveScenario(card, projectId!)
-      .pipe(
-        take(1),
-        tap((response) => {
-          console.log(response);
-        }),
-        catchError((error) => {
-          console.log(error);
-          return error;
-        })
-      )
-      .subscribe();
+    return card;
   }
 }

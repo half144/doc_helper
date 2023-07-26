@@ -1,7 +1,6 @@
 import {
   HttpClient,
   HttpContext,
-  HttpEvent,
   HttpHeaders,
   HttpParams,
 } from '@angular/common/http';

@@ -56,7 +56,9 @@ export class AuthService {
         return throwError(() => err.error.message);
       }),
       tap((res: any) => {
-        if (stayConnected) localStorage.setItem('token', res.access_token);
+        if (stayConnected) {
+          localStorage.setItem('token', res.access_token);
+        }
         this.currentUser.set(res);
 
         this.router.navigate(['/']);

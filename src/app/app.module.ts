@@ -27,6 +27,7 @@ import {
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { JwtInterceptor } from './core/interceptors/jwt.interceptor';
 import { RouterModule } from '@angular/router';
+import { ToastrModule } from 'ngx-toastr';
 
 registerLocaleData(pt);
 
@@ -51,6 +52,7 @@ registerLocaleData(pt);
     IconModule,
     TilesModule,
     InputModule,
+    ToastrModule.forRoot(),
   ],
   providers: [
     { provide: NZ_I18N, useValue: pt_BR },

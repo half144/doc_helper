@@ -27,7 +27,7 @@
                 "output": "/assets/"
               }
             ],
-            "styles": ["src/theme.less", "src/styles.scss"],
+            "styles": ["src/theme.less", "src/styles.scss", "src/toast.css"],
             "scripts": []
           },
           "configurations": {

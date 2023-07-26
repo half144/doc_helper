@@ -4,11 +4,6 @@
       <ibm-hamburger [active]="isSideBarOpen()" *ngIf="true"></ibm-hamburger>
     </div>
 
-    <ibm-header-item
-      [isCurrentPage]="currentPath() == 'create'"
-      [route]="['create']"
-      >Criar cenário</ibm-header-item
-    >
     <ibm-header-item [isCurrentPage]="currentPath() == 'bar'" [route]="['bar']"
       >Docs</ibm-header-item
     >
