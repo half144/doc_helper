@@ -34,7 +34,6 @@ const createScenariosEsperados = (scenarios) => {
         children: [
           new TextRun({
             text: scenario.testcaseName,
-            bold: true,
           }),
         ],
       })
@@ -310,7 +309,7 @@ const createCenariosDoc = (cenario, ibmLogo) => {
                           left: 100,
                           right: 100,
                         },
-                        children: [new Paragraph(cenario.cardReviwer)],
+                        children: [new Paragraph('')],
                       }),
                     ],
                   }),
