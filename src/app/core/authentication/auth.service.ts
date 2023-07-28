@@ -26,7 +26,7 @@ export class AuthService {
   });
 
   updateUser = new Subject<any>();
-  private readonly updateUserSub = this.updateUser
+  protected readonly updateUserSub = this.updateUser
     .pipe(
       switchMap((user) => {
         if (!user) return of(null);

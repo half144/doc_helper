@@ -1,7 +1,7 @@
 import { Component, Input, OnInit, inject } from '@angular/core';
 import { FormBuilder, UntypedFormGroup, Validators } from '@angular/forms';
 import jsPDF from 'jspdf';
-import { catchError, take, tap } from 'rxjs';
+import { catchError, firstValueFrom, take, tap } from 'rxjs';
 import { ScenariosService } from 'src/app/core/services/scenarios/scenarios.service';
 import { ActivatedRoute } from '@angular/router';
 import { PdfService } from 'src/app/core/services/pdf/pdf.service';

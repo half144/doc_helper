@@ -57,23 +57,24 @@ const createSceariosDescritos = (scenarios) => {
     }),
     LINE_BREAK(),
     new Paragraph({
-      text: `Dado ${scenario.testcaseDescription.dado}`,
+      text: `Dado ${scenario.testcaseDescription.dado};`,
       bullet: {
         level: 2,
       },
     }),
     new Paragraph({
-      text: `Quando ${scenario.testcaseDescription.quando}`,
+      text: `Quando ${scenario.testcaseDescription.quando};`,
       bullet: {
         level: 2,
       },
     }),
     new Paragraph({
-      text: `Entao ${scenario.testcaseDescription.entao}`,
+      text: `Então ${scenario.testcaseDescription.entao}.`,
       bullet: {
         level: 2,
       },
     }),
+    LINE_BREAK(),
   ]);
 
   return scenariosEsperados;
@@ -272,9 +273,7 @@ const createCenariosDoc = (cenario, ibmLogo) => {
                           right: 100,
                         },
                         children: [
-                          new Paragraph(
-                            `Cenario INIBCSD-${cenario.cardNumber}`
-                          ),
+                          new Paragraph(`Card INIBCSD-${cenario.cardNumber}`),
                         ],
                       }),
                     ],
@@ -317,12 +316,12 @@ const createCenariosDoc = (cenario, ibmLogo) => {
                   }),
                 ],
               }),
+              LINE_BREAK(),
             ],
           }),
         },
         properties: {},
         children: [
-          LINE_BREAK(),
           LINE_BREAK(),
           LINE_BREAK(),
           new Paragraph({
