@@ -27,17 +27,10 @@ export class HttpCacheService {
   private refresh$ = new BehaviorSubject<string | null>(null);
 
   public get<T>(url: string, options?: HttpOptions): Observable<T> {
-    const cachedStore = this.store.getValue();
-    const cache = cachedStore[url];
-
-    const requestStream$ = cache ? of(cache) : this.http.get<T>(url, options).pipe(
-      tap((res) => this.saveInCache(url, res)),
-    );
-
     return this.refresh$.pipe(
       startWith(url),
       filter((refreshUrl) => refreshUrl === url),
-      switchMap(() => requestStream$),
+      switchMap(() => this.getSource(url, options)),
       catchError((err) => throwError(() => err)));
   }
 
@@ -50,7 +43,7 @@ export class HttpCacheService {
     this.refresh$.next(url);
   }
 
-  public invalidadeManyCache(urls: string[]) {
+  public invalidadeManyCaches(urls: string[]) {
     const cachedStore = this.store.getValue();
 
     urls.forEach((url) => {
@@ -64,6 +57,12 @@ export class HttpCacheService {
       ...this.store.getValue(),
       [url]: data,
     });
+  }
+
+  private getSource(url: string, options?: HttpOptions): Observable<any> {
+    return this.store.getValue()[url] ? of(this.store.getValue()[url]) : this.http.get(url, options).pipe(
+      tap((data) => this.saveInCache(url, data)),
+    );
   }
 }
 
