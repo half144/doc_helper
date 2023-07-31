@@ -10,10 +10,10 @@ import {
   Observable,
   catchError,
   filter,
-  map,
   of,
   startWith,
   switchMap,
+  tap,
 } from 'rxjs';
 
 @Injectable({
@@ -38,7 +38,7 @@ export class HttpCacheService {
       filter((refreshUrl) => refreshUrl === url),
       switchMap(() =>
         this.http.get<T>(url, options).pipe(
-          map((res) => {
+          tap((res) => {
             this.store.next({
               ...cachedStore,
               [url]: res,

@@ -1,6 +1,6 @@
-import { Component, OnInit, inject } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { switchMap } from 'rxjs';
+import { map, switchMap } from 'rxjs';
 import { ScenariosService } from 'src/app/core/services/scenarios/scenarios.service';
 import { toSignal } from '@angular/core/rxjs-interop';
 
@@ -10,12 +10,11 @@ import { toSignal } from '@angular/core/rxjs-interop';
   styleUrls: ['./edit.component.css'],
 })
 export class EditComponent {
-  activatedRoute = inject(ActivatedRoute);
-  scenariosService = inject(ScenariosService);
+  private route = inject(ActivatedRoute);
+  private scenariosService = inject(ScenariosService);
 
-  scenario$ = this.activatedRoute.params.pipe(
-    switchMap((params) => this.scenariosService.getScenarioById(params['id']))
-  );
+  scenarioId = this.route.snapshot.paramMap.get('id');
+  scenario$ = this.scenariosService.getScenarioById(this.scenarioId!);
 
   scenario = toSignal(this.scenario$);
 }
